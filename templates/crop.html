@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- display all crop fields in table from app.py -->
+    <table>
+        <tr>
+            <th>Crop ID</th>
+            <th>Crop Name</th>
+            <th>Crop Size</th>
+            <th>Crop Crop</th>
+        </tr>
+        {% for crop in crops %}
+        <tr>
+            <td>{{ crop.id }}</td>
+            <td>{{ crop.name }}</td>
+            <td>{{ crop.type }}</td>
+            <td>{{ crop.weather_condition }}</td>
+        </tr>
+        {% endfor %}
+
+        <br>
+    <!-- display all farmer in table from app.py -->
+    <table>
+        <tr>
+            <th>Farmer ID</th>
+            <th>Farmer Name</th>
+            <th>Farmer Contact Details</th>
+            <th>Farmer Land Size</th>
+            <th>Farmer Crop Performance</th>
+        </tr>
+        {% for farmer in farmers %}
+        <tr>
+            <td>{{ farmer.id }}</td>
+            <td>{{ farmer.name }}</td>
+            <td>{{ farmer.contact_details }}</td>
+            <td>{{ farmer.land_size }}</td>
+            <td>{{ farmer.crop_performance }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <!-- display all fields in table from app.py -->
+    <table>
+        <tr>
+            <th>Field ID</th>
+            <th>Field ID</th>
+            <th>Field Crop</th>
+            <th>Field Size</th>
+            <th>Field Soil Type</th>
+        </tr>
+        {% for field in fields %}
+        <tr>
+            <td>{{ field.id }}</td>
+            <td>{{ field.farmer_id }}</td>
+            <td>{{ field.crop_id }}</td>
+            <td>{{ field.size }}</td>
+            <td>{{ field.soil_type }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+
+    <!-- display all harvest in table from app.py -->
+    <table>
+        <tr>
+            <th>Harvest ID</th>
+            <th>Harvest Field</th>
+            <th>Harvest Farmer</th>
+            <th>Harvest Crop</th>
+        </tr>
+        {% for harvest in harvests %}
+        <tr>
+            <td>{{ harvest.id }}</td>
+            <td>{{harvest.field_id}}</td>
+            <td>{{harvest.farmer_id}}</td>
+            <td>{{ harvest.crop_id }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+
+    <!-- display all market in table from app.py -->
+    <table>
+        <tr>
+            <th>Market ID</th>
+            <th>Farmer Name </th>
+            <th>Market Crop</th>
+            <th>Price</th>
+            <th>Quantity</th>
+        </tr>
+        {% for market in markets %}
+        <tr>
+            <td>{{ market.id }}</td>
+            <td>{{ market.farmer_id }}</td>
+            <td>{{ market.crop_id }}</td>
+            <td>{{ market.price }}</td>
+            <td>{{ market.quantity }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
