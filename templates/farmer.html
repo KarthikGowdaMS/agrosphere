@@ -6,6 +6,24 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <!-- display all farmer in table from app.py -->
+    <table>
+        <tr>
+            <th>Farmer ID</th>
+            <th>Farmer Name</th>
+            <th>Farmer Contact Details</th>
+            <th>Farmer Land Size</th>
+            <th>Farmer Crop Performance</th>
+        </tr>
+        {% for farmer in farmers %}
+        <tr>
+            <td>{{ farmer.id }}</td>
+            <td>{{ farmer.name }}</td>
+            <td>{{ farmer.contact_details }}</td>
+            <td>{{ farmer.land_size }}</td>
+            <td>{{ farmer.crop_performance }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 </body>
 </html>

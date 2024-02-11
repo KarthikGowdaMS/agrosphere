@@ -6,6 +6,39 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <!-- display all market in table from app.py -->
+    <table>
+        <tr>
+            <th>Market ID</th>
+            <th>Farmer Name </th>
+            <th>Market Crop</th>
+            <th>Price</th>
+            <th>Quantity</th>
+        </tr>
+        {% for market in markets %}
+        <tr>
+            <td>{{ market.id }}</td>
+            <td>{{ market.farmer_id }}</td>
+            <td>{{ market.crop_id }}</td>
+            <td>{{ market.price }}</td>
+            <td>{{ market.quantity }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <form action="/markets/create" method="post">
+        <label for="farmer_id">Farmer ID:</label>
+        <input type="text" id="farmer_id" name="farmer_id">
+        <br>
+        <label for="crop_id">Crop ID:</label>
+        <input type="text" id="crop_id" name="crop_id">
+        <br>
+        <label for="price">Price:</label>
+        <input type="text" id="price" name="price">
+        <br>
+        <label for="quantity">Quantity:</label>
+        <input type="text" id="quantity" name="quantity">
+        <br>
+        <input type="submit" value="Submit">
+    </form>
 </body>
 </html>

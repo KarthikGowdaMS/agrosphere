@@ -6,6 +6,34 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <!-- display all harvest in table from app.py -->
+    <table>
+        <tr>
+            <th>Harvest ID</th>
+            <th>Harvest Field</th>
+            <th>Harvest Farmer</th>
+            <th>Harvest Crop</th>
+        </tr>
+        {% for harvest in harvests %}
+        <tr>
+            <td>{{ harvest.id }}</td>
+            <td>{{harvest.field_id}}</td>
+            <td>{{harvest.farmer_id}}</td>
+            <td>{{ harvest.crop_id }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <form action="/harvests/create" method="post">
+        <label for="field_id">Field ID:</label>
+        <input type="text" id="field_id" name="field_id">
+        <br>
+        <label for="farmer_id">Farmer ID:</label>
+        <input type="text" id="farmer_id" name="farmer_id">
+        <br>
+        <label for="crop_id">Crop ID:</label>
+        <input type="text" id="crop_id" name="crop_id">
+        <br>
+        <input type="submit" value="Submit">
+    </form>
 </body>
 </html>

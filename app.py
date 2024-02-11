@@ -52,7 +52,7 @@ def login():
                 user = User()
                 user.id = email
                 login_user(user)
-                return redirect(url_for('crop'))
+                return redirect(url_for('home'))
         return "Invalid credentials"
     return render_template('login.html')
 
@@ -75,7 +75,7 @@ def register():
         user = User()
         user.id = email
         login_user(user)
-        return redirect(url_for('crop'))
+        return redirect(url_for('home'))
     return render_template('register.html')
 
 
