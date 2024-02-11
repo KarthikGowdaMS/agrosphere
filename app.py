@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template,redirect,url_for,request
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user,logout_user
 from flask_sqlalchemy import SQLAlchemy
-
+from sqlalchemy import text
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -19,30 +19,65 @@ db = SQLAlchemy(app)
 class User(UserMixin):
     pass
     
-users={'username':'karthik','password':'karthik'}
+# farmers={'email':'karthik','password':'karthik'}
 @login_manager.user_loader
-def user_loader(username):
+def user_loader(email):
     
-    if username not in users['username']:
-        return
-
-    user = User()
-    user.id = username
-    return user
+    with db.engine.connect() as connection:
+        query = text("SELECT * FROM farmer WHERE email = :email")
+        result = connection.execute(query, {"email": email})
+        farmer=result.first()
+        if farmer:
+            user = User()
+            user.id = email
+            return user
 
 # Register
 
 # login
-@app.route('/login',methods=['POST'])
+@app.route('/login',methods=['GET','POST'])
 def login():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    if username == users['username'] and password == users['password']:
+    if request.method=='POST':
+        email = str(request.form.get('email'))
+        password = str(request.form.get('password'))
+        # print(email,password) 
+        with db.engine.connect() as connection:
+            query =  text("SELECT * FROM farmer WHERE email = :email AND password = :password")
+            result = connection.execute(query, {"email": email, "password": password})
+            farmer = result.first()
+
+        # farmer = Farmer.query.filter_by(email=email, password=password).first()
+            print(farmer)
+            if farmer:
+                user = User()
+                user.id = email
+                login_user(user)
+                return redirect(url_for('crop'))
+        return "Invalid credentials"
+    return render_template('login.html')
+
+@app.route('/register',methods=['GET','POST'])
+def register():
+    if request.method=='POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        last_farmer_id = Farmer.query.order_by(Farmer.id.desc()).first()
+        last_farmer_id = last_farmer_id.id + 1 if last_farmer_id else 1
+        
+        try:
+            with db.engine.connect() as connection:
+                query = text("INSERT INTO agrosphere.farmer (id,name,email,password,land_size,crop_performance) VALUES (:id,:name,:email,:password,:land_size,:crop_performance)")
+                connection.execute(query, {"id":last_farmer_id,"name": name, "email": email, "password": password, "land_size":0, "crop_performance": ''})
+                connection.commit()
+        except Exception as e:
+            print(e)
         user = User()
-        user.id = username
+        user.id = email
         login_user(user)
         return redirect(url_for('crop'))
-    return "Invalid username or password"
+    return render_template('register.html')
+
 
 @app.route('/logout')
 @login_required
@@ -60,7 +95,8 @@ class Crop(db.Model):
 class Farmer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    contact_details = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    password=db.column(db.String(20))
     land_size = db.Column(db.String(100), nullable=False)
     crop_performance = db.Column(db.String(100), nullable=False)
     
@@ -93,13 +129,13 @@ def index():
 
 # Crops
 # login required for this route
-
-
 @app.route('/crops')
-@login_required
 def crop():
-    crops = Crop.query.all()
-    return render_template('crop.html', crops=crops)
+    if current_user.is_authenticated:
+        crops = Crop.query.all()
+        return render_template('crop.html', crops=crops)
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/crops/create',methods=['POST'])
 def create_crop():
