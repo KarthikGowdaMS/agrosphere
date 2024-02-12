@@ -1,0 +1,141 @@
+@import "https://fonts.googleapis.com/css?family=Montserrat:300,400,700";
+.cssdoodler-table {
+  margin: 1em 0;
+  min-width: 300px;
+}
+.cssdoodler-table tr {
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+.cssdoodler-table th {
+  display: none;
+}
+.cssdoodler-table td {
+  display: block;
+}
+.cssdoodler-table td:first-child {
+  padding-top: .5em;
+}
+.cssdoodler-table td:last-child {
+  padding-bottom: .5em;
+}
+.cssdoodler-table td:before {
+  content: attr(data-th) ": ";
+  font-weight: bold;
+  width: 6.5em;
+  display: inline-block;
+}
+@media (min-width: 480px) {
+  .cssdoodler-table td:before {
+    display: none;
+  }
+}
+.cssdoodler-table th, .cssdoodler-table td {
+  text-align: left;
+}
+@media (min-width: 480px) {
+  .cssdoodler-table th, .cssdoodler-table td {
+    display: table-cell;
+    padding: .25em .5em;
+  }
+  .cssdoodler-table th:first-child, .cssdoodler-table td:first-child {
+    padding-left: 0;
+  }
+  .cssdoodler-table th:last-child, .cssdoodler-table td:last-child {
+    padding-right: 0;
+  }
+}
+
+body {
+  padding: 0 2em;
+  font-family: Montserrat, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  color: #444;
+  /* background: #eee; */
+  background-image: url("/static/images/bg.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100vh;
+}
+
+h1 {
+  font-weight: normal;
+  letter-spacing: -1px;
+  color: #272525;
+}
+
+.cssdoodler-table {
+  background: #272525;
+  color: #fff;
+  border-radius: .4em;
+  overflow: hidden;
+}
+.cssdoodler-table tr {
+  border-color: #46637f;
+}
+.cssdoodler-table th, .cssdoodler-table td {
+  margin: .5em 1em;
+}
+@media (min-width: 480px) {
+  .cssdoodler-table th, .cssdoodler-table td {
+    padding: 1em !important;
+  }
+}
+.cssdoodler-table th, .cssdoodler-table td:before {
+  color: #dd5;
+}
+
+
+.crop {
+  background-color: #272525;
+  width: 460px;
+  margin-top: 20px;
+  border-radius: 0.5rem;
+}
+
+.crop label {
+  padding: 1em;
+  font-weight: bold;
+  font-family: Montserrat, sans-serif;
+  color: #dd5;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.crop input[type="text"],
+.crop input[type="number"] {
+  width: 150px;
+  border-radius: 0.2rem;
+  padding: 0.1rem;
+  margin-left:1rem;
+  margin-top: 0rem;
+}
+
+.crop input[type="submit"],
+.crop button[type="submit"] {
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.crop input[type="submit"]:hover,
+.crop button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+form submit{
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.crop select{
+  margin-left: 1rem;
+}

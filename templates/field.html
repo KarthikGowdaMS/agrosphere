@@ -6,11 +6,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js" type="text/javascript"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-    <link rel="stylesheet" href="{{url_for('static',filename='table.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/table.css')}}">
     <title>Document</title>
 </head>
 <body>
+<<<<<<< HEAD
     <h1>Field Details</h1>
+=======
+    <h3>Field Details</h3>
+>>>>>>> e3aa46ce48d6e31605f91b65c18e9bedf45dcb3a
     <!-- display all fields in table from app.py -->
     <table class="cssdoodler-table">
         <tr>
@@ -30,41 +34,57 @@
         </tr>
         {% endfor %}
     </table>
-    <form action="/field/create" method="post">
-        <br>
-        <select name="crop_id" id="crop_id">
-            {% for crop in crops %}
-            <option value="{{ crop.id }}">{{ crop.name }}</option>
-            {% endfor %}
-        </select>
-        <br>
-        <label for="size">Field Size:</label>
-        <input type="text" id="size" name="size">
-        <br>
-        <label for="soil_type">Soil Type:</label>
-        <input type="text" id="soil_type" name="soil_type">
-        <br>
-        <input type="submit" value="Submit">
-    </form>
+    <h3 style="color: #fff;">Edit Field Detials</h3>
+    <div class="crop">
 
-    <!-- create form to edit these -->
-    <form action="/field/edit/5" method="post">
-        <br>
-        <!-- <label for="id">Field ID:</label>
-        <input type="text" id="id" name="id"> -->
-        <br>
-        <label for="crop">Crop</label>
-        <select name="crop" id="crop_id">
-            {% for crop in crops %}
-            <option value="{{ crop.id }}">{{ crop.name }}</option>
-            {% endfor %}
-        </select>
-        <label for="size">Field Size:</label>
-        <input type="text" id="size" name="size">
-        <br>
-        <label for="soil_type">Soil Type:</label>
-        <input type="text" id="soil_type" name="soil_type">
-        <br>
-        <input type="submit" value="Submit">
+        <form action="/field/create" method="post">
+            <br>
+            <select name="crop_id" id="crop_id">
+                {% for crop in crops %}
+                <option value="{{ crop.id }}">{{ crop.name }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <label for="size">Field Size:</label>
+            <input type="text" id="size" name="size">
+            <br>
+            <label for="soil_type">Soil Type:</label>
+            <input type="text" id="soil_type" name="soil_type">
+            <br>
+            <input type="submit" value="Submit">
+        </form>
+    
+        <!-- create form to edit these -->
+        <form action="/field/edit/5" method="post">
+            <br>
+            <!-- <label for="id">Field ID:</label>
+            <input type="text" id="id" name="id"> -->
+            <br>
+            <input type="number" name="crop">
+            <input type="number" name="farmer" id="">
+            <label for="size">Field Size:</label>
+            <input type="text" id="size" name="size">
+            <br>
+            <label for="soil_type">Soil Type:</label>
+            <input type="text" id="soil_type" name="soil_type">
+            <br>
+            <input type="submit" value="Submit">
+        </form>
+    
+        <form method="POST" id="deleteForm">
+            <label for="field_id">Enter the ID of the crop to delete:</label>
+            <input type="number" id="field_id" name="fiel_id" required>
+            <button type="submit">Delete</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('deleteForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var fieldID = document.getElementById('field_id').value;
+            this.action = "/field/delete/" + fieldID;
+            this.submit();
+        });
+        </script>
 </body>
 </html>
