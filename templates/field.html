@@ -10,7 +10,7 @@
     <table>
         <tr>
             <th>Field ID</th>
-            <th>Field ID</th>
+            <th>Farmer ID</th>
             <th>Field Crop</th>
             <th>Field Size</th>
             <th>Field Soil Type</th>
@@ -25,12 +25,13 @@
         </tr>
         {% endfor %}
     </table>
-    <form action="/fields/create" method="post">
-        <label for="farmer_id">Farmer ID:</label>
-        <input type="text" id="farmer_id" name="farmer_id">
+    <form action="/field/create" method="post">
         <br>
-        <label for="crop_id">Crop ID:</label>
-        <input type="text" id="crop_id" name="crop_id">
+        <select name="crop_id" id="crop_id">
+            {% for crop in crops %}
+            <option value="{{ crop.id }}">{{ crop.name }}</option>
+            {% endfor %}
+        </select>
         <br>
         <label for="size">Field Size:</label>
         <input type="text" id="size" name="size">

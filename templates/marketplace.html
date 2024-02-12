@@ -25,12 +25,13 @@
         </tr>
         {% endfor %}
     </table>
-    <form action="/markets/create" method="post">
-        <label for="farmer_id">Farmer ID:</label>
-        <input type="text" id="farmer_id" name="farmer_id">
-        <br>
-        <label for="crop_id">Crop ID:</label>
-        <input type="text" id="crop_id" name="crop_id">
+    <form action="/market/create" method="post">
+
+   <select name="crop" id="">
+   {% for crop in crops %}
+   <option value="{{crop.id}}">{{crop.name}}</option>
+   {% endfor %}
+    </select>
         <br>
         <label for="price">Price:</label>
         <input type="text" id="price" name="price">
