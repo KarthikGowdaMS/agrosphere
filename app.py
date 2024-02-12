@@ -31,6 +31,7 @@ def user_loader(id):
         if farmer:
             user = User()
             user.id =farmer.id
+            user.role=farmer.role
             return user
     # return Farmer.query.get(int(farmer_id))
         
@@ -48,7 +49,7 @@ class Farmer(db.Model):
     password=db.column(db.String(20))
     land_size = db.Column(db.String(100), nullable=False)
     crop_performance = db.Column(db.String(100), nullable=False)
-    
+    role=db.Column(db.String(100),nullable=False)
     def get_id(self):
         return str(self.id)
     
@@ -101,6 +102,7 @@ def login():
             if farmer:
                 user=User()
                 user.id=farmer.id
+                user.role=farmer.role
                 # print(farmer.id)
                 login_user(user)
                 return redirect(url_for('home'))
@@ -118,14 +120,15 @@ def register():
         
         try:
             with db.engine.connect() as connection:
-                query = text("INSERT INTO agrosphere.farmer (name,email,password,land_size,crop_performance) VALUES (:name,:email,:password,:land_size,:crop_performance)")
-                connection.execute(query, {"name": name, "email": email, "password": password, "land_size":0, "crop_performance": ''})
+                query = text("INSERT INTO agrosphere.farmer (name,email,password,land_size,crop_performance,role) VALUES (:name,:email,:password,:land_size,:crop_performance,:role)")
+                connection.execute(query, {"name": name, "email": email, "password": password, "land_size":0, "crop_performance": '',"role":"user"})
                 connection.commit()
         except Exception as e:
             print(e)
             
         user=User()
         user.id=farmer.id
+        user.role=farmer.role
         login_user(user)
         return redirect(url_for('login'))
     return render_template('register.html')
@@ -262,10 +265,14 @@ def create_field():
 @app.route('/field/edit/<int:id>',methods=['POST'])
 def edit_field(id):
     # get details from the post request
-    crop=request.form.get('crop')
+    role=current_user.role
+    if role=='user':
+        return "You are not authorized to edit this"
+    
+    crop=int(request.form.get('crop'))
     field = Field.query.get(id)
-    field.farmer_id = request.form.get('farmer_id')
-    field.crop_id = crop.id
+    field.farmer_id = int(request.form.get('farmer'))
+    field.crop_id = crop
     field.size = request.form.get('size')
     field.soil_type = request.form.get('soil_type')
     
