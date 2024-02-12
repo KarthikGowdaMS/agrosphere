@@ -10,30 +10,35 @@
     <title>Document</title>
 </head>
 <body>
-    <!-- display all harvest in table from app.py -->
+  <h3>Harvest Details</h3>
+  <div class="conatiner">
     <table class="cssdoodler-table">
-        <tr>
-            <th>Harvest ID</th>
-            <th>Harvest Field</th>
-            <th>Harvest Farmer</th>
-            <th>Harvest Crop</th>
-        </tr>
-        {% for harvest in harvests %}
-        <tr>
-            <td>{{ harvest.id }}</td>
-            <td>{{harvest.field_id}}</td>
-            <td>{{harvest.farmer_id}}</td>
-            <td>{{ harvest.crop_id }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+      <tr>
+          <th>Harvest ID</th>
+          <th>Harvest Field</th>
+          <th>Harvest Farmer</th>
+          <th>Harvest Crop</th>
+      </tr>
+      {% for harvest in harvests %}
+      <tr>
+          <td>{{ harvest.id }}</td>
+          <td>{{harvest.field_id}}</td>
+          <td>{{harvest.farmer_id}}</td>
+          <td>{{ harvest.crop_id }}</td>
+      </tr>
+      {% endfor %}
+  </table>
+  <h3 style="color: #fff;">Add Harvest Details</h3>
+  <div class="crop">
     <form action="/harvest/create" method="post">
+      <label for="">Field ID</label>
       <select name="field" id="">
         {% for field in fields %}
         <option value="{{field.id}}">{{field.id}}</option>
         {% endfor %}
       </select>
         <br>
+        <label for="">Crop Name</label>
         <select name="crop" id="">
             {% for crop in crops %}
             <option value="{{crop.id}}">{{crop.name}}</option>
@@ -44,5 +49,10 @@
         <input type="text" name="quantity" id="quantity" >
         <input type="submit" value="Submit">
     </form>
+  </div>
+  </div>
+    <!-- display all harvest in table from app.py -->
+    
+    
 </body>
 </html>

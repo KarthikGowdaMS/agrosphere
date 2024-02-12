@@ -85,3 +85,57 @@ h1 {
 .cssdoodler-table th, .cssdoodler-table td:before {
   color: #dd5;
 }
+
+
+.crop {
+  background-color: #272525;
+  width: 460px;
+  margin-top: 20px;
+  border-radius: 0.5rem;
+}
+
+.crop label {
+  padding: 1em;
+  font-weight: bold;
+  font-family: Montserrat, sans-serif;
+  color: #dd5;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.crop input[type="text"],
+.crop input[type="number"] {
+  width: 150px;
+  border-radius: 0.2rem;
+  padding: 0.1rem;
+  margin-left:1rem;
+  margin-top: 0rem;
+}
+
+.crop input[type="submit"],
+.crop button[type="submit"] {
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.crop input[type="submit"]:hover,
+.crop button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+form submit{
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.crop select{
+  margin-left: 1rem;
+}
