@@ -142,7 +142,7 @@ def logout():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('login.html')
 
 
 @app.route('/home')
@@ -159,6 +159,7 @@ def crop():
         return render_template('crop.html', crops=crops)
     else:
         return redirect(url_for('login'))
+
 
 @app.route('/crops/create',methods=['POST'])
 def create_crop():
