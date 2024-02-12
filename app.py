@@ -4,6 +4,8 @@ from flask import Flask, render_template,redirect,url_for,request
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user,logout_user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
+from sqlalchemy.orm import joinedload
+
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -60,13 +62,13 @@ class Farmer(db.Model):
     @property
     def is_authenticated(self):
         return True
-
-    
     
 class Field(db.Model):
     id = db.Column(db.Integer, primary_key=True,autoincrement=True)
     farmer_id = db.Column(db.Integer, db.ForeignKey('farmer.id'), nullable=False)
+    farmer = db.relationship('Farmer', backref=db.backref('fields', cascade='all, delete-orphan'))
     crop_id = db.Column(db.Integer, db.ForeignKey('crop.id'), nullable=False)
+    crop = db.relationship('Crop', backref=db.backref('fields', cascade='all, delete-orphan'))
     size = db.Column(db.String(100), nullable=False)
     soil_type = db.Column(db.String(100), nullable=False)
     
@@ -74,13 +76,17 @@ class Harvestandyield(db.Model):
     id = db.Column(db.Integer, primary_key=True,autoincrement=True)
     field_id = db.Column(db.Integer, db.ForeignKey('field.id'), nullable=False)
     farmer_id = db.Column(db.Integer,db.ForeignKey('farmer.id') ,nullable=False)
+    farmer = db.relationship('Farmer', backref=db.backref('harvests', cascade='all, delete-orphan'))
     crop_id = db.Column(db.Integer,db.ForeignKey('crop.id') ,nullable=False)
+    crop = db.relationship('Crop', backref=db.backref('harvests', cascade='all, delete-orphan'))
     quantity=db.Column(db.Integer,nullable=False)
     
 class Marketplace(db.Model):
     id = db.Column(db.Integer, primary_key=True,autoincrement=True)
     farmer_id = db.Column(db.Integer, db.ForeignKey('farmer.id'), nullable=False)
+    farmer = db.relationship('Farmer', backref=db.backref('markets', cascade='all, delete-orphan'))
     crop_id = db.Column(db.Integer, db.ForeignKey('crop.id'), nullable=False)
+    crop = db.relationship('Crop', backref=db.backref('markets', cascade='all, delete-orphan'))
     price = db.Column(db.String(100), nullable=False)
     quantity = db.Column(db.String(100), nullable=False)
 
@@ -139,6 +145,12 @@ def register():
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+@app.route('/profile')
+def profile():
+    farmer = Farmer.query.get(current_user.id)
+    return render_template('profile.html', farmer=farmer)
+
 
 @app.route('/')
 def index():
@@ -200,6 +212,8 @@ def delete_crop(id):
 
 @app.route('/farmers')
 def farmer():
+    if current_user.role=='user':
+        return "You are not authorized to view this"
     farmers = Farmer.query.all()
     return render_template('farmer.html', farmers=farmers)
 
@@ -234,6 +248,8 @@ def edit_farmer(id):
 @app.route('/farmer/delete/<int:id>',methods=['POST'])
 def delete_farmer(id):
     # get details from the post request
+    # farmer id is foreign key in all tables delete them when farmer is deleted
+
     farmer = Farmer.query.get(id)
     db.session.delete(farmer)
     db.session.commit()
@@ -243,9 +259,9 @@ def delete_farmer(id):
 # fields
 @app.route('/fields')
 def field():
-    fields = Field.query.all()
+    fields_with_crops = db.session.query(Field, Crop,Farmer).join(Crop, Field.crop_id == Crop.id).join(Farmer,Farmer.id==Field.farmer_id).filter(Field.farmer_id==current_user.id).all()
     crops=Crop.query.all()
-    return render_template('field.html', fields=fields,crops=crops)
+    return render_template('field.html', fields=fields_with_crops,crops=crops)
 
 @app.route('/field/create',methods=['POST'])
 def create_field():
@@ -254,14 +270,17 @@ def create_field():
     farmer_id=current_user.id
     print(farmer_id)
     crop_id = request.form.get('crop_id')
-    size = request.form.get('size')
+    size = float(request.form.get('size'))
     soil_type = request.form.get('soil_type')
     # crop_id=crop.id 
-    
     field_data = Field(farmer_id=farmer_id, crop_id=crop_id, size=size, soil_type=soil_type)
+    
+    farmer=Farmer.query.get(farmer_id)
+    farmer.land_size+=size
     db.session.add(field_data)
     db.session.commit()
-    return "Form submitted", 200
+    # return "Form submitted", 200
+    return redirect(url_for('field'))
 
 @app.route('/field/edit/<int:id>',methods=['POST'])
 def edit_field(id):
@@ -272,13 +291,22 @@ def edit_field(id):
     
     crop=int(request.form.get('crop'))
     field = Field.query.get(id)
-    field.farmer_id = int(request.form.get('farmer'))
+    field.farmer_id = current_user.id
     field.crop_id = crop
-    field.size = request.form.get('size')
+    field.size = float(request.form.get('size'))
     field.soil_type = request.form.get('soil_type')
-    
     db.session.commit()
-    return "Form submitted", 200
+
+    farmer=Farmer.query.get(current_user.id)
+    field=Field.query.filter_by(farmer_id=current_user.id).all()
+    field_size=0
+    for f in field:
+        field_size+=f.size
+    farmer.land_size=field_size
+    db.session.commit()
+    # return "Form submitted", 200
+    return redirect(url_for('field'))
+
 
 @app.route('/field/delete/<int:id>',methods=['POST'])
 def delete_field(id):

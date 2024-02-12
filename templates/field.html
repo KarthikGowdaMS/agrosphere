@@ -10,20 +10,21 @@
     <title>Document</title>
 </head>
 <body>
+    <h1>Field Details</h1>
     <!-- display all fields in table from app.py -->
     <table class="cssdoodler-table">
         <tr>
-            <th>Field ID</th>
-            <th>Farmer ID</th>
-            <th>Field Crop</th>
-            <th>Field Size</th>
-            <th>Field Soil Type</th>
+            <th>ID</th>
+            <th>Farmer</th>
+            <th>Crop</th>
+            <th>Size</th>
+            <th>Soil Type</th>
         </tr>
-        {% for field in fields %}
+        {% for field,crop,farmer in fields %}
         <tr>
             <td>{{ field.id }}</td>
-            <td>{{ field.farmer_id }}</td>
-            <td>{{ field.crop_id }}</td>
+            <td>{{ farmer.name }}</td>
+            <td>{{ crop.name }}</td>
             <td>{{ field.size }}</td>
             <td>{{ field.soil_type }}</td>
         </tr>
@@ -52,8 +53,12 @@
         <!-- <label for="id">Field ID:</label>
         <input type="text" id="id" name="id"> -->
         <br>
-        <input type="number" name="crop">
-        <input type="number" name="farmer" id="">
+        <label for="crop">Crop</label>
+        <select name="crop" id="crop_id">
+            {% for crop in crops %}
+            <option value="{{ crop.id }}">{{ crop.name }}</option>
+            {% endfor %}
+        </select>
         <label for="size">Field Size:</label>
         <input type="text" id="size" name="size">
         <br>
