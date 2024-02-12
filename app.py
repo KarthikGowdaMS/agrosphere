@@ -5,7 +5,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, cur
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 
-app = Flask(__name__)
+app = Flask(__name__,static_url_path='/static')
 login_manager = LoginManager()
 login_manager.init_app(app)
 app.config['SECRET_KEY'] = 'thisismylittlesecret'
@@ -138,11 +138,11 @@ def register():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('home'))
 
 @app.route('/')
 def index():
-    return render_template('login.html')
+    return render_template('home.html')
 
 
 @app.route('/home')

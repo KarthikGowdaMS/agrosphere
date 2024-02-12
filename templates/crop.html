@@ -6,7 +6,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js" type="text/javascript"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-    <link rel="stylesheet" href="{{url_for('static',filename='table.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/table.css')}}">
     <title>Document</title>
 </head>
 <body>
@@ -41,6 +41,10 @@
         <input type="text" id="weather_condition" name="weather_condition">
         <br>
         <input type="submit" value="Submit">
+    </form>
+
+    <form action="/crops/delete/7" method="post">
+        <button type="submit">Delete</button>
     </form>
 </body>
 </html>
