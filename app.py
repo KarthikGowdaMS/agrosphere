@@ -48,7 +48,7 @@ class Farmer(db.Model):
     id = db.Column(db.Integer, primary_key=True,autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False)
-    password=db.column(db.String(20))
+    password=db.Column(db.String(20),nullable=False)
     land_size = db.Column(db.String(100), nullable=False)
     crop_performance = db.Column(db.String(100), nullable=False)
     role=db.Column(db.String(100),nullable=False)
@@ -120,10 +120,10 @@ def login():
 @app.route('/register',methods=['GET','POST'])
 def register():
     if request.method=='POST':
-        name = request.form.get('name')
-        email = request.form.get('email')
-        password = request.form.get('password')
-        
+        name = str(request.form.get('name'))
+        email = str(request.form.get('email'))
+        password = str(request.form.get('password'))
+        # print(password)
         # try:
         #     with db.engine.connect() as connection:
         #         query = text("INSERT INTO agrosphere.farmer (name,email,password,land_size,crop_performance,role) VALUES (:name,:email,:password,:land_size,:crop_performance,:role)")
@@ -132,6 +132,7 @@ def register():
         # except Exception as e:
         #     print(e)
         farmer_data=Farmer(name=name, email=email, password=password,land_size=0,crop_performance='',role='user')
+        
         db.session.add(farmer_data)
         db.session.commit()
         
