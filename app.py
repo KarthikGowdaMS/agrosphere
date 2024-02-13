@@ -124,19 +124,24 @@ def register():
         email = request.form.get('email')
         password = request.form.get('password')
         
-        try:
-            with db.engine.connect() as connection:
-                query = text("INSERT INTO agrosphere.farmer (name,email,password,land_size,crop_performance,role) VALUES (:name,:email,:password,:land_size,:crop_performance,:role)")
-                connection.execute(query, {"name": name, "email": email, "password": password, "land_size":0, "crop_performance": '',"role":"user"})
-                connection.commit()
-        except Exception as e:
-            print(e)
-            
+        # try:
+        #     with db.engine.connect() as connection:
+        #         query = text("INSERT INTO agrosphere.farmer (name,email,password,land_size,crop_performance,role) VALUES (:name,:email,:password,:land_size,:crop_performance,:role)")
+        #         connection.execute(query, {"name": name, "email": email, "password": password, "land_size":0, "crop_performance": '',"role":"user"})
+        #         connection.commit()
+        # except Exception as e:
+        #     print(e)
+        farmer_data=Farmer(name=name, email=email, password=password,land_size=0,crop_performance='',role='user')
+        db.session.add(farmer_data)
+        db.session.commit()
+        
+        farmer = Farmer.query.filter_by(email=email, password=password).first()
+        print(farmer.id)
         user=User()
         user.id=farmer.id
         user.role=farmer.role
         login_user(user)
-        return redirect(url_for('login'))
+        return redirect(url_for('home'))
     return render_template('register.html')
 
 

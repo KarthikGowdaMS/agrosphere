@@ -34,10 +34,12 @@
   <div class="bottom"></div>
   <div class="center">
     <h2>Sign Up</h2>
-    <input type="text" name="email" placeholder="Email">
-    <input type="password" name="password" placeholder="Password">
-    <input type="text" name="name" placeholder="Name">
-    <button type="submit" value="Register">Sign Up</button>
+    <form action="/register" method="post">
+      <input type="text" name="email" placeholder="Username">
+      <input type="password" name="password" placeholder="Password">
+      <input type="text" name="name" placeholder="Name">
+      <button type="submit" value="register">submit</button>
+  </form>
   </div>
 </div>
 <!-- partial -->
