@@ -217,6 +217,9 @@ def delete_crop(id):
     # return 'Crop Deleted', 200 
     return redirect(url_for('crop'))
 
+@app.route('/crops/edit-crop', methods=['POST','GET'])
+def edit_crop_page():
+    return render_template('edit-crop.html')
 
 # farmers
 
@@ -265,6 +268,10 @@ def delete_farmer(id):
     db.session.commit()
     # return 'Farmer Deleted', 200
     return redirect(url_for('farmer'))
+
+@app.route('/farmer/edit-farmer', methods=['POST','GET'])
+def edit_farmer_page():
+    return render_template('edit-farmer.html')
 
 
 # fields
@@ -328,6 +335,9 @@ def delete_field(id):
     # return 'Field Deleted', 200
     return redirect(url_for('field'))
 
+@app.route('/field/edit-field', methods=['POST','GET'])
+def edit_field_page():
+    return render_template('edit-field.html')
 
 # harvests
 
@@ -382,6 +392,9 @@ def delete_harvest(id):
     # return 'Harvest Deleted', 200
     return redirect(url_for('harvest'))
 
+@app.route('/harvest/edit-harvest', methods=['POST','GET'])
+def edit_havest_page():
+    return render_template('edit-harvest.html')
 
 # markets
 
@@ -389,6 +402,7 @@ def delete_harvest(id):
 def market():
     # markets = Marketplace.query.filter(Marketplace.farmer_id==current_user.id).all()
     markets = db.session.query(Marketplace, Crop,Farmer).join(Crop, Marketplace.crop_id == Crop.id).join(Farmer,Farmer.id==Marketplace.farmer_id).all()
+     
     crops=Crop.query.all()
     
     return render_template('marketplace.html', markets=markets,crops=crops)
@@ -431,6 +445,9 @@ def delete_market(id):
     # return 'Market Deleted', 200
     return redirect(url_for('market'))
 
+@app.route('/market/edit-market', methods=['POST','GET'])
+def edit_market_page():
+    return render_template('edit-market.html')
 
 
 if __name__ == '__main__':

@@ -30,31 +30,8 @@
       </tr>
       {% endfor %}
   </table>
-  <h3 style="color: #fff;">Add Harvest Details</h3>
-  <div class="crop">
-    <form action="/harvest/create" method="post">
-      <label for="">Field ID</label>
-      <select name="field" id="">
-        {% for field in fields %}
-        <option value="{{field.id}}">{{field.id}}</option>
-        {% endfor %}
-      </select>
-        <br>
-        <label for="">Crop Name</label>
-        <select name="crop" id="">
-            {% for crop in crops %}
-            <option value="{{crop.id}}">{{crop.name}}</option>
-            {% endfor %}
-          </select>
-        <br>
-        <label for="quantity">Quantity</label>
-        <input type="text" name="quantity" id="quantity" >
-        <input type="submit" value="Submit">
-    </form>
-  </div>
   </div>
     <!-- display all harvest in table from app.py -->
-    
-    
+  <a href="/harvest/edit-harvest">Click here for Editing Harvest Details</a>
 </body>
 </html>

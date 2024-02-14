@@ -30,23 +30,7 @@
         </tr>
         {% endfor %}
     </table>
-    <h3 style="color: #fff;">Add New Market Details</h3>
-    <div class="crop">
-        <form action="/market/create" method="post">
-            <select name="crop" id="">
-                {% for crop in crops %}
-                <option value="{{crop.id}}">{{crop.name}}</option>
-                {% endfor %}
-            </select>
-            <br>
-            <label for="price">Price:</label>
-            <input type="text" id="price" name="price">
-            <br>
-            <label for="quantity">Quantity:</label>
-            <input type="text" id="quantity" name="quantity">
-            <br>
-            <input type="submit" value="Submit">
-        </form>
-    </div>
+
+    <a href="/market/edit-market">click for Editing Market Details</a>
 </body>
 </html>

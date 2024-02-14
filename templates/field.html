@@ -30,57 +30,6 @@
         </tr>
         {% endfor %}
     </table>
-    <h3 style="color: #fff;">Edit Field Detials</h3>
-    <div class="crop">
-
-        <form action="/field/create" method="post">
-            <br>
-            <select name="crop_id" id="crop_id">
-                {% for crop in crops %}
-                <option value="{{ crop.id }}">{{ crop.name }}</option>
-                {% endfor %}
-            </select>
-            <br>
-            <label for="size">Field Size:</label>
-            <input type="text" id="size" name="size">
-            <br>
-            <label for="soil_type">Soil Type:</label>
-            <input type="text" id="soil_type" name="soil_type">
-            <br>
-            <input type="submit" value="Submit">
-        </form>
-    
-        <!-- create form to edit these -->
-        <form action="/field/edit/5" method="post">
-            <br>
-            <!-- <label for="id">Field ID:</label>
-            <input type="text" id="id" name="id"> -->
-            <br>
-            <input type="number" name="crop">
-            <input type="number" name="farmer" id="">
-            <label for="size">Field Size:</label>
-            <input type="text" id="size" name="size">
-            <br>
-            <label for="soil_type">Soil Type:</label>
-            <input type="text" id="soil_type" name="soil_type">
-            <br>
-            <input type="submit" value="Submit">
-        </form>
-    
-        <form method="POST" id="deleteForm">
-            <label for="field_id">Enter the ID of the crop to delete:</label>
-            <input type="number" id="field_id" name="fiel_id" required>
-            <button type="submit">Delete</button>
-        </form>
-    </div>
-
-    <script>
-        document.getElementById('deleteForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            var fieldID = document.getElementById('field_id').value;
-            this.action = "/field/delete/" + fieldID;
-            this.submit();
-        });
-        </script>
+    <a href="/field/edit-field">Click here for Editing Field Details</a>
 </body>
 </html>
