@@ -388,7 +388,7 @@ def delete_harvest(id):
 @app.route('/markets')
 def market():
     # markets = Marketplace.query.filter(Marketplace.farmer_id==current_user.id).all()
-    markets = db.session.query(Marketplace, Crop,Farmer).join(Crop, Marketplace.crop_id == Crop.id).join(Farmer,Farmer.id==Marketplace.farmer_id).filter(Marketplace.farmer_id==current_user.id).all()
+    markets = db.session.query(Marketplace, Crop,Farmer).join(Crop, Marketplace.crop_id == Crop.id).join(Farmer,Farmer.id==Marketplace.farmer_id).all()
     crops=Crop.query.all()
     
     return render_template('marketplace.html', markets=markets,crops=crops)
