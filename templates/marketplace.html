@@ -16,15 +16,15 @@
         <tr>
             <th>Market ID</th>
             <th>Farmer Name </th>
-            <th>Market Crop</th>
+            <th>Crop</th>
             <th>Price</th>
             <th>Quantity</th>
         </tr>
-        {% for market in markets %}
+        {% for market,crop,farmer in markets %}
         <tr>
             <td>{{ market.id }}</td>
-            <td>{{ market.farmer_id }}</td>
-            <td>{{ market.crop_id }}</td>
+            <td>{{ farmer.name }}</td>
+            <td>{{ crop.name }}</td>
             <td>{{ market.price }}</td>
             <td>{{ market.quantity }}</td>
         </tr>

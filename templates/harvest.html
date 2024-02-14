@@ -18,13 +18,15 @@
           <th>Harvest Field</th>
           <th>Harvest Farmer</th>
           <th>Harvest Crop</th>
+          <th>Harvest Quantity</th>
       </tr>
-      {% for harvest in harvests %}
+      {% for harvest,crop,farmer in harvests %}
       <tr>
           <td>{{ harvest.id }}</td>
           <td>{{harvest.field_id}}</td>
-          <td>{{harvest.farmer_id}}</td>
-          <td>{{ harvest.crop_id }}</td>
+          <td>{{farmer.name}}</td>
+          <td>{{ crop.name }}</td>
+          <td>{{ harvest.quantity }}</td>
       </tr>
       {% endfor %}
   </table>

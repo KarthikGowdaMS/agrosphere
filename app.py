@@ -34,6 +34,7 @@ def user_loader(id):
             user = User()
             user.id =farmer.id
             user.role=farmer.role
+            user.name=farmer.name
             return user
     # return Farmer.query.get(int(farmer_id))
         
@@ -109,9 +110,10 @@ def login():
                 user=User()
                 user.id=farmer.id
                 user.role=farmer.role
+                user.name=farmer.name
                 # print(farmer.id)
                 login_user(user)
-                return redirect(url_for('home'))
+                return render_template('home.html',current_user=current_user)
         return "Invalid credentials"
     return render_template('login.html')
 
@@ -141,8 +143,9 @@ def register():
         user=User()
         user.id=farmer.id
         user.role=farmer.role
+        user.name=farmer.name
         login_user(user)
-        return redirect(url_for('home'))
+        return render_template('home.html',current_user=current_user)
     return render_template('register.html')
 
 
@@ -202,8 +205,8 @@ def edit_crop(id):
     crop.weather_condition = request.form.get('weather_condition')
     
     db.session.commit()
-    # return redirect(url_for('crops'))
-    return "Form submitted", 200
+    return redirect(url_for('crop'))
+    # return "Form submitted", 200
 
 @app.route('/crops/delete/<int:id>',methods=['POST'])
 def delete_crop(id):
@@ -211,7 +214,8 @@ def delete_crop(id):
     crop = Crop.query.get(id)
     db.session.delete(crop)
     db.session.commit()
-    return 'Crop Deleted', 200 
+    # return 'Crop Deleted', 200 
+    return redirect(url_for('crop'))
 
 
 # farmers
@@ -248,8 +252,8 @@ def edit_farmer(id):
     farmer.crop_performance = request.form.get('crop_performance')
     
     db.session.commit()
-    # return redirect(url_for('farmers'))
-    return "Form submitted", 200
+    return redirect(url_for('farmer'))
+    # return "Form submitted", 200
 
 @app.route('/farmer/delete/<int:id>',methods=['POST'])
 def delete_farmer(id):
@@ -259,7 +263,8 @@ def delete_farmer(id):
     farmer = Farmer.query.get(id)
     db.session.delete(farmer)
     db.session.commit()
-    return 'Farmer Deleted', 200
+    # return 'Farmer Deleted', 200
+    return redirect(url_for('farmer'))
 
 
 # fields
@@ -320,15 +325,17 @@ def delete_field(id):
     field = Field.query.get(id)
     db.session.delete(field)
     db.session.commit()
-    return 'Field Deleted', 200
+    # return 'Field Deleted', 200
+    return redirect(url_for('field'))
 
 
 # harvests
 
+
 @app.route('/harvests')
 def harvest():
-    harvests = Harvestandyield.query.all()
-    fields=Field.query.all()
+    harvests = db.session.query(Harvestandyield, Crop,Farmer).join(Crop, Harvestandyield.crop_id == Crop.id).join(Farmer,Farmer.id==Harvestandyield.farmer_id).filter(Harvestandyield.farmer_id==current_user.id).all()
+    fields=Field.query.filter(Field.farmer_id==current_user.id)
     crops=Crop.query.all()
     return render_template('harvest.html', harvests=harvests,fields=fields,crops=crops)
 
@@ -347,7 +354,8 @@ def create_harvest():
     harvest_data = Harvestandyield(field_id=field_id, farmer_id=farmer_id, crop_id=cropid,quantity=qty)
     db.session.add(harvest_data)
     db.session.commit()
-    return "Form submitted", 200
+    # return "Form submitted", 200
+    return redirect(url_for('harvest'))
 
 @app.route('/harvest/edit/<int:id>',methods=['POST'])
 def edit_harvest(id):
@@ -362,7 +370,8 @@ def edit_harvest(id):
     harvest.crop_id = crop.id
     
     db.session.commit()
-    return "Form submitted", 200
+    # return "Form submitted", 200
+    return redirect(url_for('harvest'))
 
 @app.route('/harvest/delete/<int:id>',methods=['POST'])
 def delete_harvest(id):
@@ -370,14 +379,16 @@ def delete_harvest(id):
     harvest = Harvestandyield.query.get(id)
     db.session.delete(harvest)
     db.session.commit()
-    return 'Harvest Deleted', 200
+    # return 'Harvest Deleted', 200
+    return redirect(url_for('harvest'))
 
 
 # markets
 
 @app.route('/markets')
 def market():
-    markets = Marketplace.query.all()
+    # markets = Marketplace.query.filter(Marketplace.farmer_id==current_user.id).all()
+    markets = db.session.query(Marketplace, Crop,Farmer).join(Crop, Marketplace.crop_id == Crop.id).join(Farmer,Farmer.id==Marketplace.farmer_id).filter(Marketplace.farmer_id==current_user.id).all()
     crops=Crop.query.all()
     
     return render_template('marketplace.html', markets=markets,crops=crops)
@@ -395,7 +406,8 @@ def create_market():
     market_data = Marketplace(farmer_id=farmer_id, crop_id=crop_id, price=price, quantity=quantity)
     db.session.add(market_data)
     db.session.commit()
-    return "Form submitted", 200
+    # return "Form submitted", 200
+    return redirect(url_for('market'))
 
 @app.route('/market/edit/<int:id>',methods=['POST'])
 def edit_market(id):
@@ -407,7 +419,8 @@ def edit_market(id):
     market.quantity = request.form.get('quantity')
     
     db.session.commit()
-    return "Form submitted", 200
+    # return "Form submitted", 200
+    return redirect(url_for('market'))
 
 @app.route('/market/delete/<int:id>',methods=['POST'])
 def delete_market(id):
@@ -415,7 +428,8 @@ def delete_market(id):
     market = Marketplace.query.get(id)
     db.session.delete(market)
     db.session.commit()
-    return 'Market Deleted', 200
+    # return 'Market Deleted', 200
+    return redirect(url_for('market'))
 
 
 
