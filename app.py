@@ -5,6 +5,9 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, cur
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 from sqlalchemy.orm import joinedload
+from sqlalchemy import Column, Integer, Float, String, ForeignKey
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
 
 
 app = Flask(__name__,static_url_path='/static')
@@ -38,58 +41,63 @@ def user_loader(id):
             return user
     # return Farmer.query.get(int(farmer_id))
         
-# Models
 class Crop(db.Model):
-    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     type = db.Column(db.String(100), nullable=False)
     weather_condition = db.Column(db.String(100))
+    harvests = db.relationship('Harvestandyield', back_populates='crop', cascade='all, delete-orphan')
+
 
 class Farmer(db.Model):
-    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False)
-    password=db.Column(db.String(20),nullable=False)
-    land_size = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String(20), nullable=False)
+    land_size = db.Column(db.Float, nullable=False)
     crop_performance = db.Column(db.String(100), nullable=False)
-    role=db.Column(db.String(100),nullable=False)
+    role = db.Column(db.String(100), nullable=False)
+    fields = db.relationship('Field', backref='farmer', cascade='all, delete-orphan')
+    harvests = db.relationship('Harvestandyield', back_populates='farmer', cascade='all, delete-orphan')
+    markets = db.relationship('Marketplace', back_populates='farmer', cascade='all, delete-orphan')
+    
     def get_id(self):
         return str(self.id)
-    
+
     @property
     def is_active(self):
-        # Replace with your actual logic for determining if the account is active
         return True
+
     @property
     def is_authenticated(self):
         return True
     
 class Field(db.Model):
-    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     farmer_id = db.Column(db.Integer, db.ForeignKey('farmer.id'), nullable=False)
-    farmer = db.relationship('Farmer', backref=db.backref('fields', cascade='all, delete-orphan'))
     crop_id = db.Column(db.Integer, db.ForeignKey('crop.id'), nullable=False)
-    crop = db.relationship('Crop', backref=db.backref('fields', cascade='all, delete-orphan'))
-    size = db.Column(db.String(100), nullable=False)
+    size = db.Column(db.Float, nullable=False)
     soil_type = db.Column(db.String(100), nullable=False)
     
 class Harvestandyield(db.Model):
-    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     field_id = db.Column(db.Integer, db.ForeignKey('field.id'), nullable=False)
-    farmer_id = db.Column(db.Integer,db.ForeignKey('farmer.id') ,nullable=False)
-    farmer = db.relationship('Farmer', backref=db.backref('harvests', cascade='all, delete-orphan'))
-    crop_id = db.Column(db.Integer,db.ForeignKey('crop.id') ,nullable=False)
-    crop = db.relationship('Crop', backref=db.backref('harvests', cascade='all, delete-orphan'))
-    quantity=db.Column(db.Integer,nullable=False)
+    farmer_id = db.Column(db.Integer, db.ForeignKey('farmer.id'), nullable=False)
+    crop_id = db.Column(db.Integer, db.ForeignKey('crop.id'), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    farmer = db.relationship('Farmer', back_populates='harvests')
+    crop = db.relationship('Crop', back_populates='harvests')
+    field = db.relationship('Field')
     
 class Marketplace(db.Model):
-    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     farmer_id = db.Column(db.Integer, db.ForeignKey('farmer.id'), nullable=False)
-    farmer = db.relationship('Farmer', backref=db.backref('markets', cascade='all, delete-orphan'))
     crop_id = db.Column(db.Integer, db.ForeignKey('crop.id'), nullable=False)
-    crop = db.relationship('Crop', backref=db.backref('markets', cascade='all, delete-orphan'))
     price = db.Column(db.String(100), nullable=False)
-    quantity = db.Column(db.String(100), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    farmer = db.relationship('Farmer', back_populates='markets')
+    crop = db.relationship('Crop')
+
 
 
 # login
@@ -324,6 +332,9 @@ def delete_field(id):
     # get details from the post request
     field = Field.query.get(id)
     db.session.delete(field)
+    db.session.commit()
+    
+    Farmer.query.get(current_user.id).land_size-=field.size
     db.session.commit()
     # return 'Field Deleted', 200
     return redirect(url_for('field'))
