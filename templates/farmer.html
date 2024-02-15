@@ -30,7 +30,7 @@
             <td>{{ farmer.email }}</td>
             <td>{{ farmer.land_size }}</td>
             <td>{{ farmer.crop_performance }}</td>
-            <<td><a href="/farmer/edit-farmer" class="btn btn-success">View</a></td>>
+            <td><a href="/farmer/{{farmer.id}}" class="btn btn-success">View</a></td>
             <td><form id="deleteFarmerForm" method="POST" action="/farmer/delete/{{farmer.id}}" >
                 <!-- <input type="hidden" id="farmer_id" name="farmer_id" value="{{farmer.id}}"> -->
                 <button type="submit" class="btn btn-danger">Delete</button>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- DISPLAY FARMER DETAILS -->
+
+    <h3>Farmer Details</h3>
+    <div class="container">
+        <table class="cssdoodler-table">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                </tr>
+                {% if farmer %}
+                    <tr>
+                        <td>{{ farmer.farmer[0][0].id }}</td>
+                        <td>{{ farmer.farmer[0][0].name }}</td>
+                        <td>{{ farmer.farmer[0][0].email }}</td>
+                    </tr>
+                {% endif %}
+            </table>
+            <h1>Number of fields:{{farmer.count}}</h1>
+<h1>Field Crops</h1>
+            <ul>
+                {%for farmer,field,crops in farmer.farmer%}
+                <li>{{crops.name}}</li>
+                {%endfor%}
+            </ul>
+
+<h1>Field Size:{{field_size}}Acres</h1>
+            <h1>Harvest Quantity:{{harvest_data.quantity}} Kg</h1>
+            <h1>Harvest Crops</h1>
+            <ul>{%for crop in harvest_data.crops%}
+                <li>{{crop}}</li>
+                {%endfor%}
+            </ul>
+
+            <h1>Market Quantity:{{market_data.quantity}} Kg</h1>
+            <h1>Market crops</h1>
+            <ul>
+                {%for crop in market_data.crops%}
+                <li>{{crop}}</li>
+                {%endfor%}
+            </ul>
+</body>
+</html>
