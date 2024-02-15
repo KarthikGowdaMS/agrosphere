@@ -39,7 +39,8 @@
         <p>Agrosphere is a platform that provides farmers with the necessary information to improve their crop yield and make better decisions.</p>
         <div class="buttons">
             {% if current_user.is_authenticated %}
-                <p>Welcome, {{ current_user.name }}</p>   
+                <p style="position: relative; top:0.6rem;">Welcome, {{ current_user.name }}</p>
+                <a href="/logout" class="button">Logout</a>
             {% else %}
                 <a href="./login" class="button">Login</a>
                 <a href="./register" class="button">Signup</a>
