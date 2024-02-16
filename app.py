@@ -256,45 +256,45 @@ def farmer_profile(farmer_id):
             if farmer_id!=current_user.id:
                     return render_template('forbidden.html')
             else:
-                farmer_id= current_user.id
-        else:
-            farmer_id=farmer_id
-            print(farmer_id)
-            farmer = db.session.query(Farmer, Field,Crop)\
-            .join(Field, Field.farmer_id == Farmer.id)\
-            .join(Crop, Field.crop_id == Crop.id)\
-            .filter(Farmer.id == farmer_id).all()
-            print(farmer)
-            count=0
-            for items in farmer:
-                count+=1
-            farmer_data={'farmer':farmer,'count':count}
-            # calculate land size
-            fields=Field.query.filter(Field.farmer_id==farmer_id).all()
-            field_size=0
-            for f in fields:
-                field_size+=f.size
-                
-            # list all harvested crops
-            harvests = db.session.query(Harvestandyield, Crop).join(Crop, Harvestandyield.crop_id == Crop.id).filter(Harvestandyield.farmer_id==farmer_id).all()
-            harvested_crops=[]
-            harvest_quantity=0
-            for h,c in harvests:
-                harvested_crops.append(c.name)
-                harvest_quantity+=h.quantity
-            harvest_data={'quantity':harvest_quantity,'crops':harvested_crops}
+                farmer_id=current_user.id
+
+        # print(farmer_id)
+        farmer = db.session.query(Farmer, Field,Crop)\
+        .join(Field, Field.farmer_id == Farmer.id)\
+        .join(Crop, Field.crop_id == Crop.id)\
+        .filter(Farmer.id == farmer_id).all()
+        print(farmer)
+        count=0
+        for items in farmer:
+            count+=1
+        farmer_data={'farmer':farmer,'count':count}
+        # calculate land size
+        fields=Field.query.filter(Field.farmer_id==farmer_id).all()
+        field_size=0
+        for f in fields:
+            field_size+=f.size
             
-            # list all crops in market
-            markets=db.session.query(Marketplace, Crop).join(Crop, Marketplace.crop_id == Crop.id).filter(Marketplace.farmer_id==farmer_id).all()
-            market_quantity=0
-            market_crops=[]
-            for m,c in markets:
-                market_crops.append(c.name)
-                market_quantity+=m.quantity
-            market_data={'quantity':market_quantity,'crops':market_crops}
-            
-            return render_template('profile.html', farmer=farmer_data,field_size=field_size,harvest_data=harvest_data,market_data=market_data)
-    return redirect(url_for('login'))
+        # list all harvested crops
+        harvests = db.session.query(Harvestandyield, Crop).join(Crop, Harvestandyield.crop_id == Crop.id).filter(Harvestandyield.farmer_id==farmer_id).all()
+        harvested_crops=[]
+        harvest_quantity=0
+        for h,c in harvests:
+            harvested_crops.append(c.name)
+            harvest_quantity+=h.quantity
+        harvest_data={'quantity':harvest_quantity,'crops':harvested_crops}
+        
+        # list all crops in market
+        markets=db.session.query(Marketplace, Crop).join(Crop, Marketplace.crop_id == Crop.id).filter(Marketplace.farmer_id==farmer_id).all()
+        market_quantity=0
+        market_crops=[]
+        for m,c in markets:
+            market_crops.append(c.name)
+            market_quantity+=m.quantity
+        market_data={'quantity':market_quantity,'crops':market_crops}
+        
+        return render_template('profile.html', farmer=farmer_data,field_size=field_size,harvest_data=harvest_data,market_data=market_data)
+    else:
+        return redirect(url_for('login'))
 
 
 # @app.route('/farmers/create',methods=['POST'])
