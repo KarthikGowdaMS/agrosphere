@@ -27,10 +27,14 @@
             <td>{{ crop.name }}</td>
             <td>{{ market.price }}</td>
             <td>{{ market.quantity }}</td>
+            <td><a href="/market/{{market.id}}">Edit</a></td>
+            {% if current_user.role == 'admin' %}
+            <td><a href="/market/delete-market/{{market.id}}">Delete</a></td>
+            {% endif %}
         </tr>
         {% endfor %}
     </table>
 
-    <a href="/market/edit-market">click for Editing Market Details</a>
+    
 </body>
 </html>

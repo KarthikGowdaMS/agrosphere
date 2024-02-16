@@ -6,33 +6,26 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="{{url_for('static',filename='css/edit.css')}}">
-    <title>Document</title>
+    <title>Edit User</title>
 </head>
 <body>
-    <h3>Edit Field details here</h3>
+    <h3>Edit User details here</h3>
     <div class="form-container">
-        <form action="/field/create" method="post">
+        <form action="/field/edit/{{crop.id}}" method="post">
             <div class="mb-3 row">
-                <label for="crop_id" class="col-sm-2 col-form-label">Crop ID:</label>
-                <div class="col-sm-9">
-                    <select name="crop_id" id="crop_id" class="form-select">
-                        {% for crop in crops %}
-                        <option value="{{ crop.id }}">{{ crop.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                <label for="username" class="col-sm-2 col-form-label">Farmer ID : {{crop.farmer_id}}</label>
             </div>
-            <div class="mb-3 row">
-                <label for="size" class="col-sm-2 col-form-label">Field Size:</label>
-                <div class="col-sm-9">
-                    <input type="text" id="size" name="size" class="form-control">
-                </div>
+            <div class="mb-3">
+                <label for="crop_id" class="form-label">Crop ID:</label>
+                <input type="number" id="crop_id" name="crop_id" value="{{crop.crop_id}}" class="form-control">
             </div>
-            <div class="mb-3 row">
-                <label for="soil_type" class="col-sm-2 col-form-label">Soil Type:</label>
-                <div class="col-sm-9">
-                    <input type="text" id="soil_type" name="soil_type" class="form-control">
-                </div>
+            <div class="mb-3">
+                <label for="size" class="form-label">Field Size:</label>
+                <input type="text" id="size" name="size" value="{{crop.size}}" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="soil_type" class="form-label">Soil Type:</label>
+                <input type="text" id="soil_type" value="{{crop.soil_type}}" name="soil_type" class="form-control">
             </div>
             <div class="mb-3 row">
                 <div class="col-sm-2"></div>
@@ -41,68 +34,10 @@
                 </div>
                 <div class="col-sm-2"></div>
             </div>
+            
         </form>
-        <br>
-        <form method="POST" id="deleteForm">
-            <div class="mb-3 row">
-                <label for="field_id" class="col-sm-2 col-form-label">Enter the ID of the field to delete:</label>
-                <div class="col-sm-9">
-                    <input type="number" id="field_id" name="field_id" class="form-control" required>
-                </div>
-            </div>
-            <div class="mb-3 row">
-                <div class="col-sm-2"></div>
-                <div class="col-sm-8 text-center">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </div>
-                <div class="col-sm-2"></div>
-            </div>
-        </form>
-        <br>
-        <form method="POST" id="editForm">
-            <div class="mb-3 row">
-                <label for="edit_field_id" class="col-sm-2 col-form-label">Enter the ID of the field to edit:</label>
-                <div class="col-sm-9">
-                    <input type="number" id="edit_field_id" name="edit_field_id" class="form-control" required>
-                </div>
-            </div>
-            <div class="mb-3 row">
-                <label for="size" class="col-sm-2 col-form-label">Field Size:</label>
-                <div class="col-sm-9">
-                    <input type="text" id="size" name="size" class="form-control">
-                </div>
-            </div>
-            <div class="mb-3 row">
-                <label for="soil_type" class="col-sm-2 col-form-label">Soil Type:</label>
-                <div class="col-sm-9">
-                    <input type="text" id="soil_type" name="soil_type" class="form-control">
-                </div>
-            </div>
-            <div class="mb-3 row">
-                <div class="col-sm-2"></div>
-                <div class="col-sm-8 text-center">
-                    <input type="submit" value="Edit" class="btn btn-primary">
-                </div>
-                <div class="col-sm-2"></div>
-            </div>
-        </form>
-                                
     </div>
 
-    <script>
-        document.getElementById('deleteForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            var fieldID = document.getElementById('field_id').value;
-            this.action = "/field/delete/" + fieldID;
-            this.submit();
-        });
-
-        document.getElementById('editForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            var fieldID = document.getElementById('edit_field_id').value;
-            this.action = "/field/edit/" + fieldID;
-            this.submit();
-        });
-    </script>
+    
 </body>
 </html>

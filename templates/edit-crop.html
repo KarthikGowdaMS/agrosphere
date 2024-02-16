@@ -11,23 +11,23 @@
 <body>
     <h3>Edit Your Crop Details Here</h3>
     <div class="form-container">
-        <form action="/crops/create" method="post">
+        <form action="/crops/edit/{{current_user.id}}" method="post">
             <div class="mb-3 row">
                 <label for="name" class="col-sm-2 col-form-label">Crop Name:</label>
                 <div class="col-sm-9">
-                    <input type="text" id="name" name="name" class="form-control">
+                    <input type="text" id="name" name="name" value="{{crop.name}}" class="form-control">
                 </div>
             </div>
             <div class="mb-3 row">
                 <label for="type" class="col-sm-2 col-form-label">Crop Type:</label>
                 <div class="col-sm-9">
-                    <input type="text" id="type" name="type" class="form-control">
+                    <input type="text" id="type" name="type" value="{{crop.type}}" class="form-control">
                 </div>
             </div>
             <div class="mb-3 row">
                 <label for="weather_condition" class="col-sm-2 col-form-label">Weather Condition:</label>
                 <div class="col-sm-9">
-                    <input type="text" id="weather_condition" name="weather_condition" class="form-control">
+                    <input type="text" id="weather_condition" value="{{crop.weather_condition}}" name="weather_condition" class="form-control">
                 </div>
             </div>
             <div class="mb-3 row">
@@ -39,28 +39,14 @@
             </div>
         </form>
         
-        <form method="POST" id="deleteForm">
-            <div class="mb-3 row">
-                <label for="crop_id" class="col-sm-2 col-form-label">Enter the ID of the crop to delete:</label>
-                <div class="col-sm-9">
-                    <input type="number" id="crop_id" name="crop_id" class="form-control" required>
-                </div>
-            </div>
-            <div class="mb-3 row">
-                <div class="col-sm-2"></div>
-                <div class="col-sm-8 text-center">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </div>
-                <div class="col-sm-2"></div>
-            </div>
-        </form>
+        
         
     </div>
 
     <script>
         document.getElementById('deleteForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            var cropId = document.getElementById('crop_id').value;
+            var cropId = document.getElementById('deletecrop').value;
             this.action = "/crops/delete/" + cropId;
             this.submit();
         });

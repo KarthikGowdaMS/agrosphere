@@ -11,32 +11,38 @@
 <body>
     <h3>Edit farmer details here</h3>
     <div class="form-container">
-        <form method="POST" id="deleteFarmerForm">
+        <form action="/farmer/edit/{{farmer.id}}" method="post">
             <div class="mb-3 row">
-                <label for="farmer_id" class="col-sm-2 col-form-label">Enter the ID of the farmer to delete:</label>
+                <label for="name" class="col-sm-2 col-form-label">Farmer Name:</label>
                 <div class="col-sm-9">
-                    <input type="number" id="farmer_id" name="farmer_id" class="form-control" value="{{farmer.id}}" required>
+                    <input type="text" id="name" name="name" value="{{farmer.name}}" class="form-control" required>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="email" class="col-sm-2 col-form-label">Farmer Email:</label>
+                <div class="col-sm-9">
+                    <input type="email" id="email" name="email" value="{{farmer.email}}" class="form-control" required>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="land_size" class="col-sm-2 col-form-label">Farmer Land Size:</label>
+                <div class="col-sm-9">
+                    <input type="number" id="land_size" name="land_size" value="{{farmer.land_size}}" class="form-control" required>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="crop_performance" class="col-sm-2 col-form-label">Farmer Crop Performance:</label>
+                <div class="col-sm-9">
+                    <input type="text" id="crop_performance" value="{{farmer.crop_performance}}" name="crop_performance" class="form-control"  required>
                 </div>
             </div>
             <div class="mb-3 row">
                 <div class="col-sm-2"></div>
                 <div class="col-sm-8 text-center">
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <input type="submit" value="Submit" class="btn btn-success">
                 </div>
                 <div class="col-sm-2"></div>
             </div>
-        </form>
-    </div>
-    
-
-    <script>
-        document.getElementById('deleteFarmerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            var farmerId = document.getElementById('farmer_id').value;
-            this.action = "/farmer/delete/" + farmerId;
-            this.submit();
-        });
-    </script>
-    
+        </form>    
 </body>
 </html>

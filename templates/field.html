@@ -27,9 +27,16 @@
             <td>{{ crop.name }}</td>
             <td>{{ field.size }}</td>
             <td>{{ field.soil_type }}</td>
+            <td><a href="/field/{{field.id}}" class="btn btn-success">View</a></td>
+            <!-- delete button -->
+            <td>
+                <form action="/field/delete/{{field.id}}" method="post">
+                    <input type="submit" value="Delete" class="btn btn-danger">
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </table>
-    <a href="/field/edit-field">Click here for Editing Field Details</a>
+    <!-- <a href="/field/edit-field">Click here for Editing Field Details</a> -->
 </body>
 </html>

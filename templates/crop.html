@@ -26,25 +26,21 @@
                 <td>{{ crop.name }}</td>
                 <td>{{ crop.type }}</td>
                 <td>{{ crop.weather_condition }}</td>
+                {% if current_user.role == "admin" %}
+                <td><a href="/crops/{{crop.id}}">View</a></td>
+                <td><td><form id="deleteForm" method="POST" action="/crops/delete/{{crop.id}}" >
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form></td></td>
+                {% endif %}
             </tr>
             {% endfor %}
         </table>
         <br>
-        <a href="/crops/edit-crop">Click here to Edit Crop Information</a>
+             
         
     </div>
 
-    
-    <script>
-    document.getElementById('deleteForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        var cropId = document.getElementById('crop_id').value;
-        this.action = "/crops/delete/" + cropId;
-        this.submit();
-    });
-    </script>
-
-    
+   
 
 </body>
 </html>

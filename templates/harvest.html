@@ -27,11 +27,17 @@
           <td>{{farmer.name}}</td>
           <td>{{ crop.name }}</td>
           <td>{{ harvest.quantity }}</td>
+          <td><a href="/harvest/{{harvest.id}}">Edit</a></td>
+            <td>
+              <form id="deleteFarmerForm" method="POST" action="/harvest/delete/{{harvest.id}}">
+                <!-- <input type="hidden" id="farmer_id" name="farmer_id" value="{{farmer.id}}"> -->
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </td>
       </tr>
       {% endfor %}
   </table>
   </div>
     <!-- display all harvest in table from app.py -->
-  <a href="/harvest/edit-harvest">Click here for Editing Harvest Details</a>
 </body>
 </html>

@@ -11,14 +11,12 @@
 <body>
     <h3>Edit Harvest details here</h3>
     <div class="form-container">
-      <form action="/harvest/create" method="post">
+      <form action="/harvest/edit/{{current_user.id}}" method="post">
         <div class="mb-3 row">
             <label for="field" class="col-sm-2 col-form-label">Field ID:</label>
             <div class="col-sm-9">
                 <select name="field" id="field" class="form-select">
-                    {% for field in fields %}
                     <option value="{{ field.id }}">{{ field.id }}</option>
-                    {% endfor %}
                 </select>
             </div>
         </div>
