@@ -11,21 +11,25 @@
 <body>
     <h3>Edit User details here</h3>
     <div class="form-container">
-        <form action="/field/edit/{{crop.id}}" method="post">
+        <form action="/field/edit/{{field[0].id}}" method="post">
             <div class="mb-3 row">
-                <label for="username" class="col-sm-2 col-form-label">Farmer ID : {{crop.farmer_id}}</label>
+                <label for="username" class="col-sm-2 col-form-label">Farmer ID : {{field[0].farmer_id}}</label>
             </div>
             <div class="mb-3">
-                <label for="crop_id" class="form-label">Crop ID:</label>
-                <input type="number" id="crop_id" name="crop_id" value="{{crop.crop_id}}" class="form-control">
+                <label for="crop_id" class="form-label">Crop Name:</label>
+                <select name="crop_id" id="crop_id">
+                    {%for crop in crops%}
+                    <option value="{{crop.id}}" name="crop_id">{{crop.name}}</option>
+                    {%endfor%}
+                </select>
             </div>
             <div class="mb-3">
                 <label for="size" class="form-label">Field Size:</label>
-                <input type="text" id="size" name="size" value="{{crop.size}}" class="form-control">
+                <input type="text" id="size" name="size" value="{{field[0].size}}" class="form-control">
             </div>
             <div class="mb-3">
                 <label for="soil_type" class="form-label">Soil Type:</label>
-                <input type="text" id="soil_type" value="{{crop.soil_type}}" name="soil_type" class="form-control">
+                <input type="text" id="soil_type" value="{{field[0].soil_type}}" name="soil_type" class="form-control">
             </div>
             <div class="mb-3 row">
                 <div class="col-sm-2"></div>

@@ -27,8 +27,8 @@
                 <td>{{ crop.type }}</td>
                 <td>{{ crop.weather_condition }}</td>
                 {% if current_user.role == "admin" %}
-                <td><a href="/crops/{{crop.id}}">View</a></td>
-                <td><td><form id="deleteForm" method="POST" action="/crops/delete/{{crop.id}}" >
+                <td><a href="/crop/edit/{{crop.id}}">View</a></td>
+                <td><td><form id="deleteForm" method="POST" action="/crop/delete/{{crop.id}}" >
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form></td></td>
                 {% endif %}

@@ -11,21 +11,23 @@
 <body>
     <h3>Edit Harvest details here</h3>
     <div class="form-container">
-      <form action="/harvest/edit/{{current_user.id}}" method="post">
+      <form action="/harvest/edit/{{harvest[0].id}}" method="post">
         <div class="mb-3 row">
             <label for="field" class="col-sm-2 col-form-label">Field ID:</label>
             <div class="col-sm-9">
-                <select name="field" id="field" class="form-select">
-                    <option value="{{ field.id }}">{{ field.id }}</option>
+                <select name="field_id" id="field" class="form-select">
+                    {% for field in fields %}
+                    <option value="{{ field.id }}" name="field_id">{{ field.id }}</option>
+                    {% endfor %}
                 </select>
             </div>
         </div>
         <div class="mb-3 row">
             <label for="crop" class="col-sm-2 col-form-label">Crop Name:</label>
             <div class="col-sm-9">
-                <select name="crop" id="crop" class="form-select">
+                <select name="crop_id" id="crop" class="form-select">
                     {% for crop in crops %}
-                    <option value="{{ crop.id }}">{{ crop.name }}</option>
+                    <option value="{{ crop.id }}" name="crop_id">{{ crop.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -33,7 +35,7 @@
         <div class="mb-3 row">
             <label for="quantity" class="col-sm-2 col-form-label">Quantity:</label>
             <div class="col-sm-9">
-                <input type="text" name="quantity" id="quantity" class="form-control">
+                <input type="text" name="quantity" id="quantity" value="{{harvest[0].quantity}}" class="form-control">
             </div>
         </div>
         <div class="mb-3 row">

@@ -27,9 +27,13 @@
             <td>{{ crop.name }}</td>
             <td>{{ market.price }}</td>
             <td>{{ market.quantity }}</td>
-            <td><a href="/market/{{market.id}}">Edit</a></td>
+            <td><a href="/market/edit/{{market.id}}">Edit</a></td>
             {% if current_user.role == 'admin' %}
-            <td><a href="/market/delete-market/{{market.id}}">Delete</a></td>
+            <td>
+                <form id="deleteFarmerForm" method="POST" action="/market/delete/{{market.id}}">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
             {% endif %}
         </tr>
         {% endfor %}

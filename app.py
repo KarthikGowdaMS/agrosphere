@@ -186,14 +186,17 @@ def crop():
     if current_user.is_authenticated:
         crops = Crop.query.all()
         return render_template('crop.html', crops=crops)
-    else:
-        return redirect(url_for('login'))
+    
+    return redirect(url_for('login'))
 
-@app.route('/crops/create',methods=['POST'])
+@app.route('/crop/create',methods=['POST'])
 def create_crop():
     # get details from the post request
     # crop_id= request.form.get('id')
     if current_user.is_authenticated:
+        if current_user.role != 'admin':
+            return render_template('forbidden.html')
+        
         crop_name = request.form.get('name')
         crop_type = request.form.get('type')
         weather_condition = request.form.get('weather_condition')
@@ -201,48 +204,47 @@ def create_crop():
         crop_data = Crop(name=crop_name, type=crop_type, weather_condition=weather_condition)
         db.session.add(crop_data)
         db.session.commit()
+        # return "Form submitted", 200
         return redirect(url_for('crop'))
-    return render_template('forbidden.html')
-    # return "Form submitted", 200
-
-@app.route('/crops/<int:id>',methods=['GET','POST'])
-def edit_crop_det(id):
-    if current_user.role != 'admin':
-        return render_template('forbidden.html')
-    crop = Crop.query.get(id)
-    return render_template('edit-crop.html',crop=crop)
     
-@app.route('/crops/edit/<int:id>',methods=['GET','POST'])
+    return redirect(url_for('login'))
+    
+@app.route('/crop/edit/<int:id>',methods=['GET','POST'])
 def edit_crop(id):
 
-    if not current_user.is_authenticated:
-        return render_template('forbidden.html')
-    
-    if request.method=='POST':
+    if current_user.is_authenticated:
+        if current_user.role != 'admin':
+            return render_template('forbidden.html')
         
+        if request.method=='POST':
+            
+            crop = Crop.query.get(id)
+            crop.name = request.form.get('name')
+            crop.type = request.form.get('type')
+            crop.weather_condition = request.form.get('weather_condition')
+            
+            db.session.commit()
+            
+            return redirect(url_for('crop'))
+            # return "Form submitted", 200
+            
         crop = Crop.query.get(id)
-        crop.name = request.form.get('name')
-        crop.type = request.form.get('type')
-        crop.weather_condition = request.form.get('weather_condition')
-        
-        db.session.commit()
-        
-        return redirect(url_for('crop'))
-        # return "Form submitted", 200
-        
-    crop = Crop.query.get(id)
-    return render_template('edit-crop.html',crop=crop)
+        return render_template('edit-crop.html',crop=crop)
+    return redirect(url_for('login'))
 
-@app.route('/crops/delete/<int:id>',methods=['POST'])
+@app.route('/crop/delete/<int:id>',methods=['POST'])
 def delete_crop(id):
     # get details from the post request
-    if not current_user.is_authenticated:
-        return render_template('forbidden.html')
-    crop = Crop.query.get(id)
-    db.session.delete(crop)
-    db.session.commit()
-    # return 'Crop Deleted', 200 
-    return redirect(url_for('crop'))
+    if current_user.is_authenticated:
+        if current_user.role != 'admin':
+            return render_template('forbidden.html')
+        
+        crop = Crop.query.get(id)
+        db.session.delete(crop)
+        db.session.commit()
+        # return 'Crop Deleted', 200 
+        return redirect(url_for('crop'))
+    return redirect(url_for('login'))
 
 
 # farmers
@@ -321,18 +323,16 @@ def farmer_profile(farmer_id):
 #     # return redirect(url_for('farmers'))
 #     return "Form submitted", 200
 
-@app.route('/farmer/page/<int:id>',methods=['GET','POST'])
-def edit_farmer_det(id):
-    farmer = Farmer.query.get(id)
-    return render_template('edit-farmer.html',farmer=farmer)
-
 @app.route('/farmer/edit/<int:id>',methods=['GET','POST'])
 def edit_farmer(id):
     # get details from the post request
     if not current_user.is_authenticated:
         return render_template('forbidden.html')
     
-    if request.method=='POST':        
+    if request.method=='POST':
+        if current_user.id!=id and current_user.role!='admin':
+            return render_template('forbidden.html')
+        
         farmer = Farmer.query.get(id)
         if farmer:
             farmer.name = request.form.get('name')
@@ -346,7 +346,7 @@ def edit_farmer(id):
     farmer = Farmer.query.get(id)
     if farmer:
         farmer_id=farmer.id
-        if farmer_id!=current_user.id:
+        if farmer_id!=current_user.id and current_user.role!='admin':
             return render_template('forbidden.html')
         
         return render_template('edit-farmer.html',farmer=farmer)
@@ -382,8 +382,8 @@ def field():
         
         crops = Crop.query.all()
         return render_template('field.html', fields=fields_with_crops, crops=crops)
-    else:
-        return redirect(url_for('login'))
+    
+    return redirect(url_for('login'))
 
 @app.route('/field/create',methods=['GET','POST'])
 def create_field():
@@ -393,7 +393,7 @@ def create_field():
     
     if request.method=='POST':
         farmer_id=current_user.id
-        print(farmer_id)
+        # print(farmer_id)
         crop_id = request.form.get('crop_id')
         size = float(request.form.get('size'))
         soil_type = request.form.get('soil_type')
@@ -410,11 +410,6 @@ def create_field():
     crops=Crop.query.all()
     return render_template('create-field.html',crops=crops)
 
-@app.route('/field/<int:id>',methods=['GET','POST'])
-def edit_field_det(id):
-    crop = Field.query.get(id)
-    return render_template('edit-field.html',crop=crop)
-
 @app.route('/field/edit/<int:id>',methods=['GET','POST'])
 def edit_field(id):
     # get details from the post request
@@ -423,6 +418,7 @@ def edit_field(id):
         
     if request.method=='POST':
         crop_id=int(request.form.get('crop_id'))
+        print(crop_id)
         field = Field.query.get(id)
         
         if field:
@@ -435,14 +431,13 @@ def edit_field(id):
             field.soil_type = request.form.get('soil_type')
             db.session.commit()
 
-            farmer=Farmer.query.get(current_user.id)
-            field=Field.query.filter_by(farmer_id=current_user.id).all()
+            farmer=Farmer.query.get(farmer_id)
+            field=Field.query.filter_by(farmer_id=farmer_id).all()
             field_size=0
             for f in field:
                 field_size+=f.size
             farmer.land_size=field_size
             db.session.commit()
-        crop=Field.query.all()
         # return "Form submitted", 200
         return redirect(url_for('field'))
     
@@ -451,9 +446,14 @@ def edit_field(id):
         farmer_id=field[0].farmer_id
         if farmer_id!=current_user.id and current_user.role!='admin':
             return render_template('forbidden.html')
-        crop=Field.query.all()
-        print(crop)
-        return render_template('edit-field.html',field=field,crop=crop)
+        
+        crop=field[1]
+        crops=Crop.query.all()
+        crops.remove(crop)
+        crops.insert(0,crop)
+        # print(crops)
+        
+        return render_template('edit-field.html',field=field,crops=crops)
     return "Field not found", 404
 
 @app.route('/field/delete/<int:id>',methods=['POST'])
@@ -472,7 +472,7 @@ def delete_field(id):
         db.session.delete(field)
         db.session.commit()
         
-        Farmer.query.get(current_user.id).land_size-=field.size
+        Farmer.query.get(farmer_id).land_size-=field.size
         db.session.commit()
         # return 'Field Deleted', 200
         return redirect(url_for('field'))
@@ -518,13 +518,6 @@ def create_harvest():
     fields=Field.query.filter(Field.farmer_id==current_user.id)
     return render_template('create-harvest.html',crops=crops,fields=fields)
 
-@app.route('/harvest/<int:id>',methods=['GET','POST'])
-def edit_harvest_det(id):
-    field = Field.query.get(id)
-    crops = Crop.query.all()
-    # print(field)
-    return render_template('edit-harvest.html',field=field,crops=crops)
-
 @app.route('/harvest/edit/<int:id>',methods=['GET','POST'])
 def edit_harvest(id):
     # get details from the post request
@@ -533,26 +526,39 @@ def edit_harvest(id):
     if request.method=='POST':
         crop=int(request.form.get('crop_id'))
         field=int(request.form.get('field_id'))
-        
-        harvest = Harvestandyield.query.get(id)
+        print(field)
+        quantity=float(request.form.get('quantity'))
+        harvest = Harvestandyield.query.filter_by(id=id).first()
+        print(harvest.farmer_id)
         if harvest:
             farmer_id=harvest.farmer_id
-            if farmer_id!=current_user.id:
+            if farmer_id!=current_user.id and current_user.role!='admin':
                 return render_template('forbidden.html')
             
             harvest.field_id = field
             harvest.crop_id = crop
+            harvest.quantity = quantity
             
             db.session.commit()
         # return "Form submitted", 200
         return redirect(url_for('harvest'))
     
     harvest = db.session.query(Harvestandyield, Crop,Farmer,Field).join(Crop, Harvestandyield.crop_id == Crop.id).join(Farmer,Farmer.id==Harvestandyield.farmer_id).join(Field,Field.id==Harvestandyield.field_id).filter(Harvestandyield.id==id).first()
+    print(harvest)
     if harvest:
         farmer_id=harvest[0].farmer_id 
         if farmer_id!=current_user.id and current_user.role!='admin':
             return render_template('forbidden.html')
-        return render_template('edit-harvest.html',harvest=harvest)
+        crop=harvest[1]
+        crops=Crop.query.all()
+        if len(crops)>0:crops.remove(crop)
+        crops.insert(0,crop)
+        
+        field=harvest[3]
+        fields=Field.query.filter(Field.farmer_id==farmer_id).all()
+        if len(fields)>0:fields.remove(field)
+        fields.insert(0,field)
+        return render_template('edit-harvest.html',harvest=harvest,crops=crops,fields=fields)
     return "Harvest not found", 404
 
 @app.route('/harvest/delete/<int:id>',methods=['POST'])
@@ -610,12 +616,6 @@ def create_market():
     crops=Crop.query.all()
     return render_template('create-market.html',crops=crops)
 
-@app.route('/market/<int:id>',methods=['GET','POST']) 
-def edit_market_det(id):
-    market = Marketplace.query.get(id)
-    crops = Crop.query.all()
-    return render_template('edit-market.html',market=market,crops=crops)
-
 @app.route('/market/edit/<int:id>',methods=['GET','POST'])
 def edit_market(id):
     if not current_user.is_authenticated:
@@ -631,9 +631,9 @@ def edit_market(id):
             if farmer_id!=current_user.id and current_user.role!='admin':
                 return render_template('forbidden.html')
             
-            crop_id = request.form.get('crop_id')
-            if crop_id is not None:
-                market.crop_id = int(crop_id)
+            crop_id = int(request.form.get('crop_id'))
+
+            market.crop_id = int(crop_id)
             market.price = request.form.get('price')
             market.quantity = request.form.get('quantity')
             
@@ -645,10 +645,15 @@ def edit_market(id):
     market = db.session.query(Marketplace, Crop,Farmer).join(Crop, Marketplace.crop_id == Crop.id).join(Farmer,Farmer.id==Marketplace.farmer_id).filter(Marketplace.id==id).first()
     if market:
         farmer_id=market[0].farmer_id
+        crop=market[1]
         crops=Crop.query.all()
+        if len(crops)>0 and crops.count(crop)>0:crops.remove(crop)
+        crops.insert(0,crop)
+        
         if farmer_id!=current_user.id and current_user.role!='admin':
             return render_template('forbidden.html')
-        return render_template('edit-market.html',market=market,crop=crop)
+        
+        return render_template('edit-market.html',market=market,crops=crops)
     return "Market not found", 404
 
 @app.route('/market/delete/<int:id>',methods=['POST'])
