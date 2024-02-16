@@ -330,7 +330,6 @@ def edit_farmer(id):
         if farmer:
             farmer.name = request.form.get('name')
             farmer.email = request.form.get('email')
-            farmer.land_size = request.form.get('land_size')
             farmer.crop_performance = request.form.get('crop_performance')
             
             db.session.commit()
@@ -434,8 +433,8 @@ def edit_field(id):
     
     field = db.session.query(Field, Crop,Farmer).join(Crop, Field.crop_id == Crop.id).join(Farmer,Farmer.id==Field.farmer_id).filter(Field.id==id).first()
     if field:
-        farmer_id=field.farmer_id
-        if farmer_id!=current_user.id:
+        farmer_id=field[0].farmer_id
+        if farmer_id!=current_user.id and current_user.role!='admin':
             return render_template('forbidden.html')
         return render_template('edit-field.html',field=field)
     return "Field not found", 404
@@ -451,7 +450,7 @@ def delete_field(id):
     if field: 
         farmer_id=field.farmer_id
         
-        if farmer_id!=current_user.id:
+        if farmer_id!=current_user.id and current_user.role!='admin':
             return render_template('forbidden.html')
         
         db.session.delete(field)
@@ -522,8 +521,8 @@ def edit_harvest(id):
     
     harvest = db.session.query(Harvestandyield, Crop,Farmer,Field).join(Crop, Harvestandyield.crop_id == Crop.id).join(Farmer,Farmer.id==Harvestandyield.farmer_id).join(Field,Field.id==Harvestandyield.field_id).filter(Harvestandyield.id==id).first()
     if harvest:
-        farmer_id=harvest.farmer_id 
-        if farmer_id!=current_user.id:
+        farmer_id=harvest[0].farmer_id 
+        if farmer_id!=current_user.id and current_user.role!='admin':
             return render_template('forbidden.html')
         return render_template('edit-harvest.html',harvest=harvest)
     return "Harvest not found", 404
@@ -537,7 +536,7 @@ def delete_harvest(id):
     harvest = Harvestandyield.query.get(id)
     if harvest:
         farmer_id=harvest.farmer_id
-        if farmer_id!=current_user.id:
+        if farmer_id!=current_user.id and current_user.role!='admin':
             return render_template('forbidden.html')
     
         db.session.delete(harvest)
@@ -609,8 +608,8 @@ def edit_market(id):
     # join market crops table
     market = db.session.query(Marketplace, Crop,Farmer).join(Crop, Marketplace.crop_id == Crop.id).join(Farmer,Farmer.id==Marketplace.farmer_id).filter(Marketplace.id==id).first()
     if market:
-        farmer_id=market.farmer_id
-        if farmer_id!=current_user.id:
+        farmer_id=market[0].farmer_id
+        if farmer_id!=current_user.id and current_user.role!='admin':
             return render_template('forbidden.html')
         return render_template('edit-market.html',market=market)
     return "Market not found", 404
@@ -624,7 +623,7 @@ def delete_market(id):
     market = Marketplace.query.get(id)
     if market:
         farmer_id=market.farmer_id
-        if farmer_id!=current_user.id:
+        if farmer_id!=current_user.id and current_user.role!='admin':
             return render_template('forbidden.html')
 
         db.session.delete(market)
