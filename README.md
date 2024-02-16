@@ -1,2 +1,2 @@
-# Crop-Management-System
-A Crop management System made for DBMS project using Flask and MySQL
+# Agriculture-Management-System
+Agriculture management System made for DBMS project using Flask and MySQL
