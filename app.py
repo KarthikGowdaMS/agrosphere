@@ -405,7 +405,7 @@ def edit_field(id):
         return render_template('forbidden.html')
         
     if request.method=='POST':
-        crop=int(request.form.get('crop'))
+        crop_id=int(request.form.get('crop_id'))
         field = Field.query.get(id)
         
         if field:
@@ -413,7 +413,7 @@ def edit_field(id):
             if farmer_id!=current_user.id:
                 return render_template('forbidden.html')
             
-            field.crop_id = crop
+            field.crop_id = crop_id
             field.size = float(request.form.get('size'))
             field.soil_type = request.form.get('soil_type')
             db.session.commit()
@@ -429,12 +429,13 @@ def edit_field(id):
         # return "Form submitted", 200
         return redirect(url_for('field'))
     
-    field = Field.query.get(id)
+    field = db.session.query(Field, Crop,Farmer).join(Crop, Field.crop_id == Crop.id).join(Farmer,Farmer.id==Field.farmer_id).filter(Field.id==id).first()
     if field:
         farmer_id=field.farmer_id
         if farmer_id!=current_user.id:
             return render_template('forbidden.html')
-    return render_template('edit-field.html',field=field)
+        return render_template('edit-field.html',field=field)
+    return "Field not found", 404
 
 
 @app.route('/field/delete/<int:id>',methods=['POST'])
@@ -455,9 +456,9 @@ def delete_field(id):
         
         Farmer.query.get(current_user.id).land_size-=field.size
         db.session.commit()
-    # return 'Field Deleted', 200
-    return redirect(url_for('field'))
-
+        # return 'Field Deleted', 200
+        return redirect(url_for('field'))
+    return "Field not found", 404
 
 # harvests
 
