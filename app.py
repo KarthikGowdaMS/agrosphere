@@ -40,14 +40,16 @@ def user_loader(id):
             user.name=farmer.name
             return user
     # return Farmer.query.get(int(farmer_id))
-        
+
+
+# models
+
 class Crop(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     type = db.Column(db.String(100), nullable=False)
     weather_condition = db.Column(db.String(100))
     harvests = db.relationship('Harvestandyield', back_populates='crop', cascade='all, delete-orphan')
-
 
 class Farmer(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -97,7 +99,6 @@ class Marketplace(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     farmer = db.relationship('Farmer', back_populates='markets')
     crop = db.relationship('Crop')
-
 
 
 # login
@@ -165,12 +166,6 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route('/profile')
-def profile():
-    farmer = Farmer.query.get(current_user.id)
-    return render_template('profile.html', farmer=farmer)
-
-
 @app.route('/')
 def index():
     return render_template('home.html')
@@ -181,8 +176,11 @@ def home():
     if current_user.is_authenticated:
         return render_template('home.html')
     return redirect(url_for('login'))
+
+
 # Crops
 # login required for this route
+
 @app.route('/crops')
 def crop():
     if current_user.is_authenticated:
@@ -190,7 +188,6 @@ def crop():
         return render_template('crop.html', crops=crops)
     else:
         return redirect(url_for('login'))
-
 
 @app.route('/crops/create',methods=['POST'])
 def create_crop():
@@ -213,6 +210,7 @@ def edit_crop(id):
 
     if not current_user.is_authenticated:
         return render_template('forbidden.html')
+    
     if request.method=='POST':
         
         crop = Crop.query.get(id)
@@ -224,6 +222,7 @@ def edit_crop(id):
         
         return redirect(url_for('crop'))
         # return "Form submitted", 200
+        
     crop = Crop.query.get(id)
     return render_template('edit-crop.html',crop=crop)
 
@@ -300,7 +299,6 @@ def farmer_profile(farmer_id):
     else:
         return redirect(url_for('login'))
 
-
 # @app.route('/farmers/create',methods=['POST'])
 # def create_farmer():
 #     # get details from the post request
@@ -344,7 +342,6 @@ def edit_farmer(id):
         
         return render_template('edit-farmer.html',farmer=farmer)
     return "Farmer not found", 404
-
 
 @app.route('/farmer/delete/<int:id>',methods=['POST'])
 def delete_farmer(id):
@@ -439,7 +436,6 @@ def edit_field(id):
         return render_template('edit-field.html',field=field)
     return "Field not found", 404
 
-
 @app.route('/field/delete/<int:id>',methods=['POST'])
 def delete_field(id):
     # get details from the post request
@@ -461,6 +457,7 @@ def delete_field(id):
         # return 'Field Deleted', 200
         return redirect(url_for('field'))
     return "Field not found", 404
+
 
 # harvests
 
