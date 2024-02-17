@@ -361,7 +361,7 @@ def edit_farmer(id):
             return render_template('forbidden.html')
         
         return render_template('edit-farmer.html',farmer=farmer)
-    return "Farmer not found", 404
+    return render_template('pagenotfound.html')
 
 @app.route('/farmer/delete/<int:id>',methods=['POST'])
 def delete_farmer(id):
@@ -379,7 +379,7 @@ def delete_farmer(id):
         db.session.commit()
         # return 'Farmer Deleted', 200
         return redirect(url_for('farmer'))
-    return "Farmer not found", 404
+    return render_template('pagenotfound.html')
 
 
 # fields
@@ -469,7 +469,7 @@ def edit_field(id):
         # print(crops)
         
         return render_template('edit-field.html',field=field,crops=crops)
-    return "Field not found", 404
+    return render_template('pagenotfound.html')
 
 @app.route('/field/delete/<int:id>',methods=['POST'])
 def delete_field(id):
@@ -492,7 +492,7 @@ def delete_field(id):
         db.session.commit()
         # return 'Field Deleted', 200
         return redirect(url_for('field'))
-    return "Field not found", 404
+    return render_template('pagenotfound.html')
 
 
 # harvests
@@ -594,7 +594,7 @@ def edit_harvest(id):
         if len(fields)>0:fields.remove(field)
         fields.insert(0,field)
         return render_template('edit-harvest.html',harvest=harvest,crops=crop_with_field,fields=fields)
-    return "Harvest not found", 404
+    return render_template('pagenotfound.html')
 
 @app.route('/harvest/delete/<int:id>',methods=['POST'])
 def delete_harvest(id):
@@ -613,7 +613,7 @@ def delete_harvest(id):
         db.session.commit()
         # return 'Harvest Deleted', 200
         return redirect(url_for('harvest'))
-    return "Harvest not found", 404
+    return render_template('pagenotfound.html')
 
 
 # markets
@@ -693,7 +693,7 @@ def edit_market(id):
             return render_template('forbidden.html')
         
         return render_template('edit-market.html',market=market,crops=crops)
-    return "Market not found", 404
+    return render_template('pagenotfound.html')
 
 @app.route('/market/delete/<int:id>',methods=['POST'])
 def delete_market(id):
@@ -712,7 +712,7 @@ def delete_market(id):
         db.session.commit()
         # return 'Market Deleted', 200
         return redirect(url_for('market'))
-    return "Market not found", 404
+    return render_template('pagenotfound.html')
 
 
 if __name__ == '__main__':

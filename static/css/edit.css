@@ -1,8 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=PT+Sans&family=Roboto+Condensed:wght@300&family=Tilt+Neon&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto+Slab&display=swap');
 body{
     background-image: url("../images/form_main_bg.jpg");
     background-size: cover;
-    background-repeat: no-repeat;  
+    background-repeat: no-repeat; 
+    padding-top:3rem; 
   }
   h3{
     text-align: center;
@@ -10,6 +11,7 @@ body{
     font-family: Montserrat, sans-serif;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;  
+    margin-bottom: 2.5rem;
   }
   .header{
     padding: 2vh 0;
@@ -29,9 +31,10 @@ body{
       }
   #button-container{
     background-color: #9336B4;
-    margin-bottom: 2vh;
+    margin-bottom: 2rem;
     font-family: 'Roboto Condensed', sans-serif;
     justify-content: auto;
+    
   }
   .form-container{
     background-color: #efe363;
@@ -74,4 +77,8 @@ body{
   
   .custom-file-upload:hover {
     background-color: #9336B4; 
+  }
+
+  .btn{
+    margin-bottom: 1rem;
   }
