@@ -385,6 +385,15 @@ def field():
     
     return redirect(url_for('login'))
 
+@app.route('/field/add/<int:id>',methods=['GET','POST'])
+def field_profile(id):
+    crops = Crop.query.filter_by(id=id).first()
+    # print(crops)
+    field = Field.query.filter_by(id=id).first()
+    print(field)
+    return render_template('create-field.html',crops=crops,field=field)    
+    
+
 @app.route('/field/create',methods=['GET','POST'])
 def create_field():
     # get details from the post request
@@ -494,6 +503,17 @@ def harvest():
         return render_template('harvest.html', harvests=harvests, fields=fields, crops=crops)
     else:
         return redirect(url_for('login'))
+    
+@app.route('/harvests/add',methods=['GET','POST'])
+def harvest_profile():
+    crops = Crop.query.all()
+    fields = Field.query.filter(Field.farmer_id==current_user.id).all()
+    if current_user.role=='admin':
+        farmers = Farmer.query.all()
+    else:
+        farmers = Farmer.query.get(current_user.id)
+    print(fields)
+    return render_template('create-harvest.html', crops=crops, farmers=farmers, fields=fields)
 
 @app.route('/harvest/create',methods=['GET','POST'])
 def create_harvest():
@@ -511,8 +531,11 @@ def create_harvest():
         harvest_data = Harvestandyield(field_id=field_id, farmer_id=farmer_id, crop_id=crop_id,quantity=qty)
         db.session.add(harvest_data)
         db.session.commit()
+        crop=Crop.query.get(crop_id)
+        fields=Field.query.filter(Field.farmer_id==current_user.id)
+        farmer = Farmer.query.get(farmer_id)   
         # return "Form submitted", 200
-        return redirect(url_for('harvest'))
+        return redirect(url_for('harvest'),crop=crop,field=field,farmer=farmer)
     
     crops=Crop.query.all()
     fields=Field.query.filter(Field.farmer_id==current_user.id)
@@ -593,6 +616,15 @@ def market():
         return render_template('marketplace.html', markets=markets,crops=crops)
     else:
         return redirect(url_for('login'))
+
+@app.route('/market/add',methods=['GET','POST'])
+def market_profile():
+    crops = Crop.query.all()
+    if current_user.role=='admin':
+        farmers = Farmer.query.all()
+    else:
+        farmers = Farmer.query.get(current_user.id)
+    return render_template('create-market.html', crops=crops, farmers=farmers)
 
 @app.route('/market/create',methods=['GET','POST'])
 def create_market():

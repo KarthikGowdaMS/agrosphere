@@ -6,6 +6,53 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <!-- write form for adding new market details -->
+    <h3>Create Market details here</h3>
+    <div class="form-container">
+        <form action="/market/create" method="post">
+            <div class="mb-3 row">
+                <label for="crop" class="col-sm-2 col-form-label">Crop:</label>
+                <div class="col-sm-9">
+                    <select id="crop" name="crop_id" class="form-select">
+                        {% for crop in crops %}
+                        <option value="{{crop.id}}">{{crop.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="farmer" class="col-sm-2 col-form-label">Farmer:</label>
+                <div class="col-sm-9">
+                    <select id="farmer" name="farmer_id" class="form-select">
+                        {% if current_user.role == 'admin' %}
+                        {% for farmer in farmers %}
+                        <option value="{{ farmer.id }}">{{ farmer.name }}</option>
+                        {% endfor %}
+                        {% else %}
+                        <option value="{{ farmers.id }}">{{ farmers.name }}</option>
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="price" class="col-sm-2 col-form-label">Price:</label>
+                <div class="col-sm-9">
+                    <input type="text" id="price" name="price" class="form-control">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="quantity" class="col-sm-2 col-form-label">Quantity:</label>
+                <div class="col-sm-9">
+                    <input type="text" id="quantity" name="quantity" class="form-control">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-8 text-center">
+                    <button class="btn btn-success mx-auto" type="submit">Submit</button>
+                </div>
+                <div class="col-sm-2"></div>
+            </div>
+        </form>
 </body>
 </html>

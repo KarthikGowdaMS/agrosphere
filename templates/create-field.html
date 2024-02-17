@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- write a form for adding new field details -->
+    <h3>Add Field Details Here</h3>
+    <div class="form-container">
+        <form action="/field/create" method="post">
+            <div class="mb-3 row">
+                <label for="name" class="col-sm-2 col-form-label">Crop ID:</label>
+                <div class="col-sm-9">
+                    <input type="text" id="crop_id" name="crop_id" value="{{crops.id}}" class="form-control">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="area" class="col-sm-2 col-form-label">Size:</label>
+                <div class="col-sm-9">
+                    <input type="text" id="size" name="size" value="{{field.size}}" class="form-control">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="location" class="col-sm-2 col-form-label">Soil Type:</label>
+                <div class="col-sm-9">
+                    <input type="text" id="soil_type" name="soil_type" class="form-control">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-8 text-center">
+                    <input type="submit" value="Submit" class="btn btn-success">
+                </div>
+                <div class="col-sm-2"></div>
+            </div>
+        </form>
+</body>
+</html>
