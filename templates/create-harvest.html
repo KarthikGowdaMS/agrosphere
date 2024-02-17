@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
 </head>
+
 <body>
     <!-- write form for creating new harvests -->
     <h3>Create Harvest details here</h3>
@@ -14,8 +16,8 @@
                 <label for="crop" class="col-sm-2 col-form-label">Crop:</label>
                 <div class="col-sm-9">
                     <select id="crop" name="crop_id" class="form-select">
-                        {% for crop in crops %}
-                        <option value="{{crop.id}}">{{crop.name}}</option>
+                        {% for field,crop in crops %}
+                        <option value="{{crop.id}}" name="crop_id">{{crop.name}}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -34,32 +36,29 @@
             <!-- write farmer_id -->
             <div class="mb-3 row">
                 <label for="farmer" class="col-sm-2 col-form-label">Farmer:</label>
+                <p name="farmer">{{farmer.name}}</p>
                 <div class="col-sm-9">
-                    <select id="farmer" name="farmer_id" class="form-select">
-                        {% if current_user.role == 'admin' %}
-                        {% for farmer in farmers %}
-                        <option value="{{ farmer.id }}">{{ farmer.name }}</option>
-                        {% endfor %}
-                        {% else %}
-                        <option value="{{ farmers.id }}">{{ farmers.name }}</option>
-                        {% endif %}
-                    </select>
+                   <input type="hidden" name="farmer_id" id="farmer_id" value="{{farmer.id}}">
                 </div>
             </div>
+
             <div class="mb-3 row">
                 <label for="quantity" class="col-sm-2 col-form-label">Quantity:</label>
                 <div class="col-sm-9">
-                    <input type="text" id="quantity" name="quantity" class="form-control">
+                    <input type="text" id="quantity" name="quantity" class="form-control" />
                 </div>
             </div>
             <div class="mb-3 row">
                 <div class="col-sm-2"></div>
                 <div class="col-sm-8 text-center">
-                    <button class="btn btn-success mx-auto" type="submit">Submit</button>
+                    <button class="btn btn-success mx-auto" type="submit">
+                        Submit
+                    </button>
                 </div>
                 <div class="col-sm-2"></div>
             </div>
         </form>
-
+    </div>
 </body>
+
 </html>

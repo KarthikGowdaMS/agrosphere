@@ -26,7 +26,7 @@
             <label for="crop" class="col-sm-2 col-form-label">Crop Name:</label>
             <div class="col-sm-9">
                 <select name="crop_id" id="crop" class="form-select">
-                    {% for crop in crops %}
+                    {% for field,crop in crops %}
                     <option value="{{ crop.id }}" name="crop_id">{{ crop.name }}</option>
                     {% endfor %}
                 </select>

@@ -13,13 +13,17 @@
             <div class="mb-3 row">
                 <label for="name" class="col-sm-2 col-form-label">Crop ID:</label>
                 <div class="col-sm-9">
-                    <input type="text" id="crop_id" name="crop_id" value="{{crops.id}}" class="form-control">
+                    <select name="crop_id" id="crop">
+                        {% for crop in crops %}
+                        <option value="{{crop.id}}">{{crop.name}}</option>
+                        {% endfor %}1
+                    </select>
                 </div>
             </div>
             <div class="mb-3 row">
                 <label for="area" class="col-sm-2 col-form-label">Size:</label>
                 <div class="col-sm-9">
-                    <input type="text" id="size" name="size" value="{{field.size}}" class="form-control">
+                    <input type="text" id="size" name="size" class="form-control">
                 </div>
             </div>
             <div class="mb-3 row">

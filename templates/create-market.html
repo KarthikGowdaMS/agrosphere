@@ -14,7 +14,7 @@
                 <label for="crop" class="col-sm-2 col-form-label">Crop:</label>
                 <div class="col-sm-9">
                     <select id="crop" name="crop_id" class="form-select">
-                        {% for crop in crops %}
+                        {% for harvest,crop in crops %}
                         <option value="{{crop.id}}">{{crop.name}}</option>
                         {% endfor %}
                     </select>
@@ -22,16 +22,9 @@
             </div>
             <div class="mb-3 row">
                 <label for="farmer" class="col-sm-2 col-form-label">Farmer:</label>
+                <p id="farmer">{{farmer.name}}</p>
                 <div class="col-sm-9">
-                    <select id="farmer" name="farmer_id" class="form-select">
-                        {% if current_user.role == 'admin' %}
-                        {% for farmer in farmers %}
-                        <option value="{{ farmer.id }}">{{ farmer.name }}</option>
-                        {% endfor %}
-                        {% else %}
-                        <option value="{{ farmers.id }}">{{ farmers.name }}</option>
-                        {% endif %}
-                    </select>
+                    <input type="hidden" name="farmer_id" id="farmer_id" value="{{farmer.id}}">
                 </div>
             </div>
             <div class="mb-3 row">
