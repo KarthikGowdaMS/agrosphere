@@ -191,25 +191,30 @@ def crop():
     
     return redirect(url_for('login'))
 
-@app.route('/crop/create',methods=['POST'])
+@app.route('/crop/create', methods=['GET', 'POST'])
 def create_crop():
-    
-    # get details from the post request
-    if current_user.is_authenticated:
-        if current_user.role != 'admin':
-            return render_template('forbidden.html')
-        
+    # Check if the user is authenticated
+    if not current_user.is_authenticated:
+        return render_template('forbidden.html')
+
+    # Handle POST request
+    if request.method == 'POST':
         crop_name = request.form.get('name')
         crop_type = request.form.get('type')
         weather_condition = request.form.get('weather_condition')
-        
+
+        # Create a new Crop object
         crop_data = Crop(name=crop_name, type=crop_type, weather_condition=weather_condition)
+
+        # Add the new Crop to the database session and commit
         db.session.add(crop_data)
         db.session.commit()
-        # return "Form submitted", 200
+
+        # Redirect to the 'crop' page
         return redirect(url_for('crop'))
-    
-    return redirect(url_for('login'))
+
+    # Handle GET request
+    return render_template('create-crop.html')
     
 @app.route('/crop/edit/<int:id>',methods=['GET','POST'])
 def edit_crop(id):
