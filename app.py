@@ -24,7 +24,6 @@ db = SQLAlchemy(app)
 class User(UserMixin):
     pass
     
-# farmers={'email':'karthik','password':'karthik'}
 @login_manager.user_loader
 def user_loader(id):
     
@@ -39,8 +38,7 @@ def user_loader(id):
             user.role=farmer.role
             user.name=farmer.name
             return user
-    # return Farmer.query.get(int(farmer_id))
-
+    return None
 
 # models
 
@@ -108,13 +106,12 @@ def login():
     if request.method=='POST':
         email = str(request.form.get('email'))
         password = str(request.form.get('password'))
-        # print(email,password) 
+
         with db.engine.connect() as connection:
             query =  text("SELECT * FROM farmer WHERE email = :email AND password = :password")
             result = connection.execute(query, {"email": email, "password": password})
             farmer = result.first()
 
-            # farmer = Farmer.query.filter_by(email=email, password=password).first()
             print(farmer)
             if farmer:
                 user=User()
@@ -123,7 +120,6 @@ def login():
                 user.name=farmer.name
                 # print(farmer.id)
                 login_user(user)
-                # return render_template('home.html',current_user=current_user)
                 return redirect(url_for('home'))
             
         return "Invalid credentials"
@@ -158,7 +154,7 @@ def register():
         user.role=farmer.role
         user.name=farmer.name
         login_user(user)
-        # return render_template('home.html',current_user=current_user)
+
         return redirect(url_for('home'))
     return render_template('register.html')
 
@@ -172,7 +168,6 @@ def logout():
 def index():
     return render_template('home.html')
 
-
 @app.route('/home')
 def home():
     if current_user.is_authenticated:
@@ -181,40 +176,32 @@ def home():
 
 
 # Crops
-# login required for this route
 
 @app.route('/crops')
 def crop():
     if current_user.is_authenticated:
         crops = Crop.query.all()
         return render_template('crop.html', crops=crops)
-    
     return redirect(url_for('login'))
 
-@app.route('/crop/create', methods=['GET', 'POST'])
+@app.route('/crop/create',methods=['POST'])
 def create_crop():
-    # Check if the user is authenticated
-    if not current_user.is_authenticated:
-        return render_template('forbidden.html')
-
-    # Handle POST request
-    if request.method == 'POST':
+    
+    if current_user.is_authenticated:
+        if current_user.role != 'admin':
+            return render_template('forbidden.html')
+        
         crop_name = request.form.get('name')
         crop_type = request.form.get('type')
         weather_condition = request.form.get('weather_condition')
-
-        # Create a new Crop object
+        
         crop_data = Crop(name=crop_name, type=crop_type, weather_condition=weather_condition)
-
-        # Add the new Crop to the database session and commit
         db.session.add(crop_data)
         db.session.commit()
-
-        # Redirect to the 'crop' page
+        
+        # return "Form submitted", 200
         return redirect(url_for('crop'))
-
-    # Handle GET request
-    return render_template('create-crop.html')
+    return redirect(url_for('login'))
     
 @app.route('/crop/edit/<int:id>',methods=['GET','POST'])
 def edit_crop(id):
@@ -232,11 +219,13 @@ def edit_crop(id):
             
             db.session.commit()
             
-            return redirect(url_for('crop'))
             # return "Form submitted", 200
+            return redirect(url_for('crop'))
             
         crop = Crop.query.get(id)
-        return render_template('edit-crop.html',crop=crop)
+        if crop:
+            return render_template('edit-crop.html',crop=crop)
+        return render_template('pagenotfound.html')
     return redirect(url_for('login'))
 
 @app.route('/crop/delete/<int:id>',methods=['POST'])
@@ -248,10 +237,13 @@ def delete_crop(id):
             return render_template('forbidden.html')
         
         crop = Crop.query.get(id)
-        db.session.delete(crop)
-        db.session.commit()
-        # return 'Crop Deleted', 200 
-        return redirect(url_for('crop'))
+        if crop:
+            db.session.delete(crop)
+            db.session.commit()
+            
+            # return 'Crop Deleted', 200 
+            return redirect(url_for('crop'))
+        return render_template('pagenotfound.html')
     return redirect(url_for('login'))
 
 
@@ -264,8 +256,8 @@ def farmer():
         if current_user.role=='user':
             return redirect(url_for('farmer_profile',farmer_id=current_user.id))
         farmers = Farmer.query.all()
-        return render_template('farmer.html', farmers=farmers)
         
+        return render_template('farmer.html', farmers=farmers)
     return redirect(url_for('login'))
     
 @app.route('/farmer/<int:farmer_id>')
@@ -278,7 +270,6 @@ def farmer_profile(farmer_id):
             else:
                 farmer_id=current_user.id
 
-        # print(farmer_id)
         farmer = db.session.query(Farmer, Field,Crop)\
         .join(Field, Field.farmer_id == Farmer.id)\
         .join(Crop, Field.crop_id == Crop.id)\
@@ -351,6 +342,7 @@ def edit_farmer(id):
             farmer.crop_performance = request.form.get('crop_performance')
             
             db.session.commit()
+            
         # return "Form submitted", 200
         return redirect(url_for('farmer'))
     
@@ -377,6 +369,7 @@ def delete_farmer(id):
     if farmer:
         db.session.delete(farmer)
         db.session.commit()
+        
         # return 'Farmer Deleted', 200
         return redirect(url_for('farmer'))
     return render_template('pagenotfound.html')
@@ -394,8 +387,8 @@ def field():
             fields_with_crops = db.session.query(Field, Crop, Farmer).join(Crop, Field.crop_id == Crop.id).join(Farmer, Farmer.id == Field.farmer_id).filter(Field.farmer_id == current_user.id).all()
         
         crops = Crop.query.all()
+        
         return render_template('field.html', fields=fields_with_crops, crops=crops)
-    
     return redirect(url_for('login'))    
 
 @app.route('/field/create',methods=['GET','POST'])
@@ -418,6 +411,7 @@ def create_field():
         farmer.land_size+=size
         db.session.add(field_data)
         db.session.commit()
+        
         # return "Form submitted", 200
         return redirect(url_for('field'))
 
@@ -453,6 +447,7 @@ def edit_field(id):
                 field_size+=f.size
             farmer.land_size=field_size
             db.session.commit()
+            
         # return "Form submitted", 200
         return redirect(url_for('field'))
     
@@ -490,6 +485,7 @@ def delete_field(id):
         
         Farmer.query.get(farmer_id).land_size-=field.size
         db.session.commit()
+        
         # return 'Field Deleted', 200
         return redirect(url_for('field'))
     return render_template('pagenotfound.html')
@@ -508,9 +504,9 @@ def harvest():
         
         fields = Field.query.filter(Field.farmer_id == current_user.id)
         crops = Crop.query.all()
+        
         return render_template('harvest.html', harvests=harvests, fields=fields, crops=crops)
-    else:
-        return redirect(url_for('login'))
+    return redirect(url_for('login'))
     
 # @app.route('/harvests/add',methods=['GET','POST'])
 # def harvest_profile():
@@ -527,7 +523,6 @@ def harvest():
 def create_harvest():
     
     # get details from the post request
-    # harvest_id= request.form.get('id')
     if not current_user.is_authenticated:
         return render_template('forbidden.html')
     
@@ -542,7 +537,8 @@ def create_harvest():
         db.session.commit()
         
         fields=Field.query.filter(Field.farmer_id==current_user.id)
-        farmer = Farmer.query.get(farmer_id)   
+        farmer = Farmer.query.get(farmer_id) 
+          
         # return "Form submitted", 200
         return redirect(url_for('harvest'))
     
@@ -574,11 +570,12 @@ def edit_harvest(id):
             harvest.quantity = quantity
             
             db.session.commit()
+            
         # return "Form submitted", 200
         return redirect(url_for('harvest'))
     
     harvest = db.session.query(Harvestandyield, Crop,Farmer,Field).join(Crop, Harvestandyield.crop_id == Crop.id).join(Farmer,Farmer.id==Harvestandyield.farmer_id).join(Field,Field.id==Harvestandyield.field_id).filter(Harvestandyield.id==id).first()
-    print(harvest)
+    # print(harvest)
     if harvest:
         farmer_id=harvest[0].farmer_id 
         if farmer_id!=current_user.id and current_user.role!='admin':
@@ -593,6 +590,7 @@ def edit_harvest(id):
         fields=Field.query.filter(Field.farmer_id==farmer_id).all()
         if len(fields)>0:fields.remove(field)
         fields.insert(0,field)
+        
         return render_template('edit-harvest.html',harvest=harvest,crops=crop_with_field,fields=fields)
     return render_template('pagenotfound.html')
 
@@ -611,6 +609,7 @@ def delete_harvest(id):
     
         db.session.delete(harvest)
         db.session.commit()
+        
         # return 'Harvest Deleted', 200
         return redirect(url_for('harvest'))
     return render_template('pagenotfound.html')
@@ -622,13 +621,12 @@ def delete_harvest(id):
 def market():
     
     if current_user.is_authenticated:
-        markets = db.session.query(Marketplace, Crop,Farmer).join(Crop, Marketplace.crop_id == Crop.id).join(Farmer,Farmer.id==Marketplace.farmer_id).all()
         
+        markets = db.session.query(Marketplace, Crop,Farmer).join(Crop, Marketplace.crop_id == Crop.id).join(Farmer,Farmer.id==Marketplace.farmer_id).all()
         crops=Crop.query.all()
         
         return render_template('marketplace.html', markets=markets,crops=crops)
-    else:
-        return redirect(url_for('login'))
+    return redirect(url_for('login'))
 
 @app.route('/market/create',methods=['GET','POST'])
 def create_market():
@@ -646,6 +644,7 @@ def create_market():
         market_data = Marketplace(farmer_id=farmer_id, crop_id=crop_id, price=price, quantity=quantity)
         db.session.add(market_data)
         db.session.commit()
+        
         # return "Form submitted", 200
         return redirect(url_for('market'))
     
@@ -677,6 +676,7 @@ def edit_market(id):
             market.quantity = request.form.get('quantity')
             
             db.session.commit()
+            
         # return "Form submitted", 200
         return redirect(url_for('market'))
     
@@ -694,7 +694,7 @@ def edit_market(id):
         
         return render_template('edit-market.html',market=market,crops=crops)
     return render_template('pagenotfound.html')
-
+        
 @app.route('/market/delete/<int:id>',methods=['POST'])
 def delete_market(id):
     
@@ -710,6 +710,7 @@ def delete_market(id):
 
         db.session.delete(market)
         db.session.commit()
+        
         # return 'Market Deleted', 200
         return redirect(url_for('market'))
     return render_template('pagenotfound.html')
