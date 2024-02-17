@@ -104,6 +104,7 @@ class Marketplace(db.Model):
 # login
 @app.route('/login',methods=['GET','POST'])
 def login():
+    
     if request.method=='POST':
         email = str(request.form.get('email'))
         password = str(request.form.get('password'))
@@ -132,6 +133,7 @@ def login():
 # Register
 @app.route('/register',methods=['GET','POST'])
 def register():
+    
     if request.method=='POST':
         name = str(request.form.get('name'))
         email = str(request.form.get('email'))
@@ -191,8 +193,8 @@ def crop():
 
 @app.route('/crop/create',methods=['POST'])
 def create_crop():
+    
     # get details from the post request
-    # crop_id= request.form.get('id')
     if current_user.is_authenticated:
         if current_user.role != 'admin':
             return render_template('forbidden.html')
@@ -234,6 +236,7 @@ def edit_crop(id):
 
 @app.route('/crop/delete/<int:id>',methods=['POST'])
 def delete_crop(id):
+    
     # get details from the post request
     if current_user.is_authenticated:
         if current_user.role != 'admin':
@@ -251,6 +254,7 @@ def delete_crop(id):
 
 @app.route('/farmers')
 def farmer():
+    
     if current_user.is_authenticated:
         if current_user.role=='user':
             return redirect(url_for('farmer_profile',farmer_id=current_user.id))
@@ -261,6 +265,7 @@ def farmer():
     
 @app.route('/farmer/<int:farmer_id>')
 def farmer_profile(farmer_id):
+    
     if current_user.is_authenticated:
         if current_user.role=='user':
             if farmer_id!=current_user.id:
@@ -325,6 +330,7 @@ def farmer_profile(farmer_id):
 
 @app.route('/farmer/edit/<int:id>',methods=['GET','POST'])
 def edit_farmer(id):
+    
     # get details from the post request
     if not current_user.is_authenticated:
         return render_template('forbidden.html')
@@ -354,6 +360,7 @@ def edit_farmer(id):
 
 @app.route('/farmer/delete/<int:id>',methods=['POST'])
 def delete_farmer(id):
+    
     if not current_user.is_authenticated:
         return render_template('forbidden.html')
     
@@ -374,6 +381,7 @@ def delete_farmer(id):
 
 @app.route('/fields')
 def field():
+    
     if current_user.is_authenticated:
         if current_user.role == 'admin':
             fields_with_crops = db.session.query(Field, Crop, Farmer).join(Crop, Field.crop_id == Crop.id).join(Farmer, Farmer.id == Field.farmer_id).all()
@@ -387,6 +395,7 @@ def field():
 
 @app.route('/field/create',methods=['GET','POST'])
 def create_field():
+    
     # get details from the post request
     if not current_user.is_authenticated:
         return render_template('forbidden.html')
@@ -412,6 +421,7 @@ def create_field():
 
 @app.route('/field/edit/<int:id>',methods=['GET','POST'])
 def edit_field(id):
+    
     # get details from the post request
     if not current_user.is_authenticated:
         return render_template('forbidden.html')
@@ -458,6 +468,7 @@ def edit_field(id):
 
 @app.route('/field/delete/<int:id>',methods=['POST'])
 def delete_field(id):
+    
     # get details from the post request
     if not current_user.is_authenticated:
         return render_template('forbidden.html')
@@ -483,6 +494,7 @@ def delete_field(id):
 
 @app.route('/harvests')
 def harvest():
+    
     if current_user.is_authenticated:
         if current_user.role == 'admin':
             harvests = db.session.query(Harvestandyield, Crop, Farmer).join(Crop, Harvestandyield.crop_id == Crop.id).join(Farmer, Farmer.id == Harvestandyield.farmer_id).all()
@@ -508,6 +520,7 @@ def harvest():
 
 @app.route('/harvest/create',methods=['GET','POST'])
 def create_harvest():
+    
     # get details from the post request
     # harvest_id= request.form.get('id')
     if not current_user.is_authenticated:
@@ -535,6 +548,7 @@ def create_harvest():
 
 @app.route('/harvest/edit/<int:id>',methods=['GET','POST'])
 def edit_harvest(id):
+    
     # get details from the post request
     if not current_user.is_authenticated:
         return render_template('forbidden.html')
@@ -579,6 +593,7 @@ def edit_harvest(id):
 
 @app.route('/harvest/delete/<int:id>',methods=['POST'])
 def delete_harvest(id):
+    
     # get details from the post request
     if not current_user.is_authenticated:
         return render_template('forbidden.html')
@@ -600,8 +615,8 @@ def delete_harvest(id):
 
 @app.route('/markets')
 def market():
+    
     if current_user.is_authenticated:
-    # markets = Marketplace.query.filter(Marketplace.farmer_id==current_user.id).all()
         markets = db.session.query(Marketplace, Crop,Farmer).join(Crop, Marketplace.crop_id == Crop.id).join(Farmer,Farmer.id==Marketplace.farmer_id).all()
         
         crops=Crop.query.all()
@@ -612,8 +627,8 @@ def market():
 
 @app.route('/market/create',methods=['GET','POST'])
 def create_market():
+    
     # get details from the post request
-    # market_id= request.form.get('id')
     if not current_user.is_authenticated:
         return render_template('forbidden.html')
     
@@ -629,14 +644,14 @@ def create_market():
         # return "Form submitted", 200
         return redirect(url_for('market'))
     
-    # get crops which are present in farmers harvest's
+    # get crops which are present in farmers field's
     crop_in_fields=db.session.query(Field, Crop).join(Crop, Field.crop_id == Crop.id).filter(Field.farmer_id==current_user.id).all()
-    # crops=Crop.query.all()
     farmer=Farmer.query.get(current_user.id)
     return render_template('create-market.html',crops=crop_in_fields,farmer=farmer)
 
 @app.route('/market/edit/<int:id>',methods=['GET','POST'])
 def edit_market(id):
+    
     if not current_user.is_authenticated:
         return render_template('forbidden.html')
     
@@ -677,6 +692,7 @@ def edit_market(id):
 
 @app.route('/market/delete/<int:id>',methods=['POST'])
 def delete_market(id):
+    
     # get details from the post request
     if not current_user.is_authenticated:
         return render_template('forbidden.html')
