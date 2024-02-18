@@ -184,24 +184,28 @@ def crop():
         return render_template('crop.html', crops=crops)
     return redirect(url_for('login'))
 
-@app.route('/crop/create',methods=['POST'])
+@app.route('/crop/create',methods=['GET','POST'])
 def create_crop():
     
     if current_user.is_authenticated:
         if current_user.role != 'admin':
             return render_template('forbidden.html')
         
-        crop_name = request.form.get('name')
-        crop_type = request.form.get('type')
-        weather_condition = request.form.get('weather_condition')
-        
-        crop_data = Crop(name=crop_name, type=crop_type, weather_condition=weather_condition)
-        db.session.add(crop_data)
-        db.session.commit()
-        
-        # return "Form submitted", 200
-        return redirect(url_for('crop'))
+        if request.method=='POST':
+            
+            crop_name = request.form.get('name')
+            crop_type = request.form.get('type')
+            weather_condition = request.form.get('weather_condition')
+            
+            crop_data = Crop(name=crop_name, type=crop_type, weather_condition=weather_condition)
+            db.session.add(crop_data)
+            db.session.commit()
+            
+            # return "Form submitted", 200
+            return redirect(url_for('crop'))
+        return render_template('create-crop.html')
     return redirect(url_for('login'))
+
     
 @app.route('/crop/edit/<int:id>',methods=['GET','POST'])
 def edit_crop(id):
