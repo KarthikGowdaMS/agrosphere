@@ -18,8 +18,8 @@ load_dotenv()
 
 password = os.getenv('password')
 
-# app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://root:{password}@localhost:3306/agrosphere"
-app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://avnadmin:{password}@dbms-agm-karthikgowdams03-dbms-ams.a.aivencloud.com:15253/agrosphere"
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://root:{password}@localhost:3306/agrosphere"
+# app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://avnadmin:{password}@dbms-agm-karthikgowdams03-dbms-ams.a.aivencloud.com:15253/agrosphere"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -285,6 +285,10 @@ def farmer_profile(farmer_id):
         count=0
         for items in farmer:
             count+=1
+        
+        if count==0:
+            farmer=Farmer.query.get(farmer_id)
+            
         farmer_data={'farmer':farmer,'count':count}
         
         # calculate land size
@@ -312,8 +316,8 @@ def farmer_profile(farmer_id):
         market_data={'quantity':market_quantity,'crops':market_crops}
         
         return render_template('profile.html', farmer=farmer_data,field_size=field_size,harvest_data=harvest_data,market_data=market_data)
-    else:
-        return redirect(url_for('login'))
+    
+    return redirect(url_for('login'))
 
 # @app.route('/farmers/create',methods=['POST'])
 # def create_farmer():

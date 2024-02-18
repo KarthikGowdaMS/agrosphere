@@ -20,22 +20,30 @@
                 <th>Name</th>
                 <th>Email</th>
             </tr>
-            {% if farmer %}
+            {% if farmer.count!=0 %}
                 <tr>
                     <td>{{ farmer.farmer[0][0].id }}</td>
                     <td>{{ farmer.farmer[0][0].name }}</td>
                     <td>{{ farmer.farmer[0][0].email }}</td>
                 </tr>
             {% endif %}
+            {% if farmer.count==0 %}
+                <tr>
+                    <td>{{farmer.farmer.id}}</td>
+                    <td>{{farmer.farmer.name}}</td>
+                    <td>{{farmer.farmer.email}}</td>
+                </tr>
+            {% endif %}
         </table>
     </div> <!-- Close container div -->
     <div class="container">
         <table class="cssdoodler-table">
-            {% if farmer %}
+            
             <tr>
                 <th>Number of fields</th>
                 <th>Field Crops</th>
             </tr>
+            {% if farmer.count!=0 %}
             <tr>
                 <td>{{farmer.count}}</td>
                 <td><ul>
@@ -47,19 +55,25 @@
             <!-- <h1>Number of fields: {{ farmer.count }}</h1> -->
             
         {% endif %}
+        {% if farmer.count==0 %}
+            <tr>
+                <td>{{farmer.count}}</td>
+                <td><ul>
+                    <li>No Crops in Field</li>
+                </ul></td>
+            </tr>
+        {% endif %}
         </table>
     </div>
     
     <div class="container">
         <table class="cssdoodler-table">
-            {% if field_size %}
-                <tr>
-                    <th>Field Size:</th>
-                </tr>
+            <tr>
+                <th>Field Size:</th>
+            </tr>
                 <tr>
                     <td> {{ field_size }} Acres</td>
                 </tr>
-            {% endif %}
         </table>
     </div>
 
@@ -78,6 +92,9 @@
                         {% for crop in harvest_data.crops %}
                             <li>{{ crop }}</li>
                         {% endfor %}
+                    {% endif %}
+                    {% if not harvest_data.crops %}
+                        <li>No Crops Harvested</li>
                     {% endif %}
                 </ul></td>
             </tr>
@@ -99,6 +116,9 @@
                         {% for crop in market_data.crops %}
                             <li>{{ crop }}</li>
                         {% endfor %}
+                    {% endif %}
+                    {% if not market_data.crops %}
+                        <li>No Crops in Market</li>
                     {% endif %}
                 </ul></td>
             </tr>
