@@ -16,9 +16,11 @@ login_manager.init_app(app)
 app.config['SECRET_KEY'] = 'thisismylittlesecret'
 load_dotenv()
 
-db_url = os.getenv('db_url')
+password = os.getenv('password')
 
-app.config['SQLALCHEMY_DATABASE_URI'] = db_url
+# app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://root:{password}@localhost:3306/agrosphere"
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://avnadmin:{password}@dbms-agm-karthikgowdams03-dbms-ams.a.aivencloud.com:15253/agrosphere"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 class User(UserMixin):
@@ -30,7 +32,7 @@ def user_loader(id):
     with db.engine.connect() as connection:
         query = text("SELECT * FROM farmer WHERE id = :id")
         result = connection.execute(query, {"id": id})
-        farmer=result.first()
+        farmer=result.first() 
         
         if farmer:
             user = User()

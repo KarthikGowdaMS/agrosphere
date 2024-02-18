@@ -1,0 +1,7 @@
+python-dotenv
+flask
+flask_sqlalchemy
+flaks_login
+flask_wtf
+sqlalchemy
+

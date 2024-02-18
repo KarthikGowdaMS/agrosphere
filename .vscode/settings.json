@@ -1,3 +1,5 @@
 {
-    "CodeGPT.apiKey": "CodeGPT Plus Beta"
+    "appService.defaultWebAppToDeploy": "/subscriptions/e4e0631c-e346-4a64-8c7c-b06c63397b4d/resourceGroups/agrosphere/providers/Microsoft.Web/sites/agrosphere",
+    "appService.deploySubpath": ".",
+    "appService.showBuildDuringDeployPrompt": false
 }
