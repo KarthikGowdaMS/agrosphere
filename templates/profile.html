@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/profile.css')}}">
     <title>Document</title>
 </head>
 <body>
@@ -15,37 +19,91 @@
                 <th>ID</th>
                 <th>Name</th>
                 <th>Email</th>
+            </tr>
+            {% if farmer %}
+                <tr>
+                    <td>{{ farmer.farmer[0][0].id }}</td>
+                    <td>{{ farmer.farmer[0][0].name }}</td>
+                    <td>{{ farmer.farmer[0][0].email }}</td>
                 </tr>
-                {% if farmer %}
-                    <tr>
-                        <td>{{ farmer.farmer[0][0].id }}</td>
-                        <td>{{ farmer.farmer[0][0].name }}</td>
-                        <td>{{ farmer.farmer[0][0].email }}</td>
-                    </tr>
-                {% endif %}
-            </table>
-            <h1>Number of fields:{{farmer.count}}</h1>
-<h1>Field Crops</h1>
-            <ul>
-                {%for farmer,field,crops in farmer.farmer%}
-                <li>{{crops.name}}</li>
-                {%endfor%}
-            </ul>
+            {% endif %}
+        </table>
+    </div> <!-- Close container div -->
+    <div class="container">
+        <table class="cssdoodler-table">
+            {% if farmer %}
+            <tr>
+                <th>Number of fields</th>
+                <th>Field Crops</th>
+            </tr>
+            <tr>
+                <td>{{farmer.count}}</td>
+                <td><ul>
+                    {% for farmer, field, crops in farmer.farmer %}
+                        <li>{{ crops.name }}</li>
+                    {% endfor %}
+                </ul></td>
+            </tr>
+            <!-- <h1>Number of fields: {{ farmer.count }}</h1> -->
+            
+        {% endif %}
+        </table>
+    </div>
+    
+    <div class="container">
+        <table class="cssdoodler-table">
+            {% if field_size %}
+                <tr>
+                    <th>Field Size:</th>
+                </tr>
+                <tr>
+                    <td> {{ field_size }} Acres</td>
+                </tr>
+            {% endif %}
+        </table>
+    </div>
 
-<h1>Field Size:{{field_size}}Acres</h1>
-            <h1>Harvest Quantity:{{harvest_data.quantity}} Kg</h1>
-            <h1>Harvest Crops</h1>
-            <ul>{%for crop in harvest_data.crops%}
-                <li>{{crop}}</li>
-                {%endfor%}
-            </ul>
-
-            <h1>Market Quantity:{{market_data.quantity}} Kg</h1>
-            <h1>Market crops</h1>
-            <ul>
-                {%for crop in market_data.crops%}
-                <li>{{crop}}</li>
-                {%endfor%}
-            </ul>
+    
+    <div class="container">
+        <table class="cssdoodler-table">
+            {% if harvest_data %}
+            <tr>
+                <th>Harvest Quantity</th>
+                <th>Harvest Crops</th>
+            </tr>
+            <tr>
+                <td>{{ harvest_data.quantity }} Kg</td>
+                <td><ul>
+                    {% if harvest_data.crops %}
+                        {% for crop in harvest_data.crops %}
+                            <li>{{ crop }}</li>
+                        {% endfor %}
+                    {% endif %}
+                </ul></td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+    
+    <div class="container">
+        <table class="cssdoodler-table">
+            {% if market_data %}
+            <tr>
+                <th>Market Quantity</th>
+                <th>Market Crops</th>
+            </tr>
+            <tr>
+                <td>{{ market_data.quantity }} Kg</td>
+                <td><ul>
+                    {% if market_data.crops %}
+                        {% for crop in market_data.crops %}
+                            <li>{{ crop }}</li>
+                        {% endfor %}
+                    {% endif %}
+                </ul></td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
 </body>
 </html>
