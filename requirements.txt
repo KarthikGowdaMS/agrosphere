@@ -5,3 +5,12 @@ flask_login
 flask_wtf
 sqlalchemy
 pymysql
+cryptography  
+click
+blinker
+colorama
+itsdangerous
+MarkupSafe
+pycparser
+setuptools
+typing_extensions
