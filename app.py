@@ -319,6 +319,24 @@ def farmer_profile(farmer_id):
     
     return redirect(url_for('login'))
 
+# write for accessing farmer on a particular crop
+@app.route('/farmer/crop/<int:crop_id>',methods=['GET','POST'])
+def farmer_crop(crop_id):
+        
+        if current_user.is_authenticated:
+            if current_user.role=='user':
+                return redirect(url_for('farmer_profile',farmer_id=current_user.id))
+            
+            crop = Crop.query.get(crop_id)
+
+            farmers = db.session.query(Farmer, Field, Crop)\
+            .join(Field, Field.farmer_id == Farmer.id)\
+            .join(Crop, Field.crop_id == Crop.id)\
+            .filter(Crop.id == crop_id).all()
+            
+            return render_template('farmerbycrop.html', farmers=farmers,crop=crop)
+        return redirect(url_for('login'))
+
 # @app.route('/farmers/create',methods=['POST'])
 # def create_farmer():
 #     # get details from the post request

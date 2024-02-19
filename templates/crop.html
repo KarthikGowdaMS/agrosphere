@@ -30,6 +30,7 @@
                 <td><td><form id="deleteForm" method="POST" action="/crop/delete/{{crop.id}}" >
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form></td></td>
+                <td><a href="/farmer/crop/{{crop.id}}" class="btn btn-info">Farmer View</a></td>
                 {% endif %}
             </tr>
             {% endfor %}
