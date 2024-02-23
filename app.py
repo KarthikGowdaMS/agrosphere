@@ -18,8 +18,8 @@ load_dotenv()
 
 password = os.getenv('password')
 
-app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://root:{password}@localhost:3306/agrosphere"
-# app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://avnadmin:{password}@dbms-agm-karthikgowdams03-dbms-ams.a.aivencloud.com:15253/agrosphere"
+# app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://root:{password}@localhost:3306/agrosphere"
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://avnadmin:{password}@dbms-agm-karthikgowdams03-dbms-ams.a.aivencloud.com:15253/agrosphere"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
