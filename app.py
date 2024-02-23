@@ -16,7 +16,7 @@ login_manager.init_app(app)
 app.config['SECRET_KEY'] = 'thisismylittlesecret'
 load_dotenv()
 
-password = os.getenv('password')
+password = os.getenv('PASSWORD')
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://root:{password}@localhost:3306/agrosphere"
 app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://avnadmin:{password}@dbms-agm-karthikgowdams03-dbms-ams.a.aivencloud.com:15253/agrosphere"
